@@ -1,96 +1,102 @@
 /**
  * Taniti Island Tourism Website
- * Main JavaScript file
+ * scripts.js — Main JavaScript entry point
+ *
+ * This file initializes all interactive features for the Taniti Island
+ * tourism site. Each feature is organized into its own clearly named
+ * function so they're easy to find, update, or remove independently.
+ *
+ * Functions are defined below and all wired up at the bottom of this
+ * file inside a single DOMContentLoaded listener. If you add a new
+ * feature, define it as its own function and call it down there.
+ *
+ * Author: Abraham Macias
+ * Last updated: 2026
  */
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all interactive components
-    initMobileMenu();
-    initFaqAccordion();
-    initTabSwitching();
-    initNotificationBanner();
-    initSearchFunctionality();
-    initFormValidation();
-    initGalleryLightbox();
-    initSmoothScrolling();
-    initWeatherWidget();
-    initItineraryBuilder();
-    initMapInteraction();
-    initAnimations();
-});
 
-/**
- * Mobile Menu Toggle
- */
+// =============================================================================
+// MOBILE MENU
+// Handles the hamburger menu toggle for small screens.
+// The menu closes automatically when the user clicks anywhere outside of it,
+// which prevents the common UX issue of a stuck-open nav on mobile.
+// =============================================================================
 function initMobileMenu() {
     const menuToggle = document.querySelector('.mobile-menu-toggle');
     const navLinks = document.querySelector('.nav-links');
-    
+
+    // Exit quietly if the menu elements aren't on this page
     if (!menuToggle || !navLinks) return;
-    
+
     menuToggle.addEventListener('click', () => {
         navLinks.classList.toggle('show');
-        menuToggle.setAttribute('aria-expanded', 
-            menuToggle.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'
-        );
+
+        // Keep aria-expanded in sync so screen readers announce the correct state
+        const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+        menuToggle.setAttribute('aria-expanded', String(!isExpanded));
     });
-    
-    // Close menu when clicking outside
+
+    // Close the menu when the user clicks anywhere outside the nav bar
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.main-nav') && navLinks.classList.contains('show')) {
             navLinks.classList.remove('show');
             menuToggle.setAttribute('aria-expanded', 'false');
         }
     });
-    
-    // Set initial ARIA attributes
+
+    // Set up ARIA relationships so assistive tech knows what the button controls
     menuToggle.setAttribute('aria-expanded', 'false');
     menuToggle.setAttribute('aria-controls', 'nav-links');
     navLinks.id = 'nav-links';
 }
 
-/**
- * FAQ Accordion Functionality
- */
+
+// =============================================================================
+// FAQ ACCORDION
+// Collapses and expands FAQ answers when users click a question heading.
+// Only one answer is open at a time — closing the previous item keeps the
+// page from becoming a wall of text. Deep-linking via URL hash is also
+// supported, so you can link directly to a specific question.
+// =============================================================================
 function initFaqAccordion() {
     const faqItems = document.querySelectorAll('.faq-item h3');
-    
+
     if (!faqItems.length) return;
-    
+
     faqItems.forEach((item, index) => {
-        // Set ARIA attributes
-        const itemId = `faq-${index}`;
+        // Build unique IDs so ARIA can link each question to its answer
+        const itemId   = `faq-${index}`;
         const answerId = `faq-answer-${index}`;
-        const answer = item.nextElementSibling;
-        
+        const answer   = item.nextElementSibling;
+
         item.setAttribute('aria-expanded', 'false');
         item.setAttribute('aria-controls', answerId);
         item.id = itemId;
-        
+
         answer.setAttribute('aria-labelledby', itemId);
         answer.id = answerId;
         answer.setAttribute('role', 'region');
-        
-        // Add click event
+
         item.addEventListener('click', () => {
-            const parent = item.parentElement;
+            const parent     = item.parentElement;
             const isExpanded = item.getAttribute('aria-expanded') === 'true';
-            
-            // Close all other items
+
+            // Close every other open item before opening this one
             faqItems.forEach(otherItem => {
                 if (otherItem !== item) {
                     otherItem.setAttribute('aria-expanded', 'false');
                     otherItem.parentElement.classList.remove('active');
                 }
             });
-            
-            // Toggle current item
+
+            // Toggle the clicked item open or closed
             parent.classList.toggle('active');
-            item.setAttribute('aria-expanded', !isExpanded);
+            item.setAttribute('aria-expanded', String(!isExpanded));
         });
     });
-    
-    // Open FAQ item if URL has hash
+
+    // If the URL contains a hash pointing to a specific FAQ item,
+    // open and scroll to it automatically on page load
     if (window.location.hash) {
         const targetFaq = document.querySelector(window.location.hash);
         if (targetFaq && targetFaq.classList.contains('faq-item')) {
@@ -100,234 +106,242 @@ function initFaqAccordion() {
     }
 }
 
-/**
- * Tab Switching Functionality
- */
+
+// =============================================================================
+// TAB SWITCHING
+// Manages the category tabs on the FAQ page (e.g. "Getting Here", "Safety").
+// Uses ARIA roles (tab / tabpanel) so keyboard users and screen readers
+// can navigate tabs without a mouse.
+// =============================================================================
 function initTabSwitching() {
-    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabButtons  = document.querySelectorAll('.tab-btn');
     const tabSections = document.querySelectorAll('.faq-section');
-    
+
     if (!tabButtons.length || !tabSections.length) return;
-    
+
     tabButtons.forEach(button => {
+        // Wire up the click handler to switch the visible section
         button.addEventListener('click', () => {
             const target = button.dataset.target;
-            
-            // Update active button
+
+            // Deactivate all buttons, then activate the one that was clicked
             tabButtons.forEach(btn => {
                 btn.classList.remove('active');
                 btn.setAttribute('aria-selected', 'false');
             });
-            
             button.classList.add('active');
             button.setAttribute('aria-selected', 'true');
-            
-            // Show target section
+
+            // Hide all sections, then show only the matching one
             tabSections.forEach(section => {
                 section.classList.remove('active');
                 section.setAttribute('aria-hidden', 'true');
-                
+
                 if (section.id === target) {
                     section.classList.add('active');
                     section.setAttribute('aria-hidden', 'false');
                 }
             });
         });
-        
-        // Set initial ARIA attributes
+
+        // ARIA setup: each button is a "tab" and controls a specific "tabpanel"
         button.setAttribute('role', 'tab');
         button.setAttribute('aria-selected', button.classList.contains('active') ? 'true' : 'false');
         button.id = `tab-${button.dataset.target}`;
         button.setAttribute('aria-controls', button.dataset.target);
     });
-    
-    // Set initial ARIA attributes for tab sections
+
+    // Each section is a "tabpanel" labelled by its corresponding tab button
     tabSections.forEach(section => {
         section.setAttribute('role', 'tabpanel');
-        section.setAttribute('aria-hidden', !section.classList.contains('active'));
+        section.setAttribute('aria-hidden', String(!section.classList.contains('active')));
         section.setAttribute('aria-labelledby', `tab-${section.id}`);
     });
 }
 
-/**
- * Notification Banner
- */
+
+// =============================================================================
+// NOTIFICATION BANNER
+// Handles the dismissible announcement bar at the top of the page.
+// The closed state is saved to sessionStorage so the banner stays hidden
+// if the user refreshes the page during the same browser session.
+// If you want the banner to reappear every visit, swap sessionStorage
+// for a cookie with an expiry date instead.
+// =============================================================================
 function initNotificationBanner() {
-    const closeNotification = document.querySelector('.close-notification');
-    const notificationBanner = document.querySelector('.notification-banner');
-    
-    if (!closeNotification || !notificationBanner) return;
-    
-    closeNotification.addEventListener('click', () => {
-        notificationBanner.classList.add('fade-out');
-        
-        // Remove from DOM after animation completes
-        setTimeout(() => {
-            notificationBanner.remove();
-        }, 500);
-        
-        // Store in session storage so it doesn't reappear on page refresh
+    const closeBtn = document.querySelector('.close-notification');
+    const banner   = document.querySelector('.notification-banner');
+
+    if (!closeBtn || !banner) return;
+
+    // Hide the banner immediately if the user already closed it this session
+    if (sessionStorage.getItem('notificationClosed') === 'true') {
+        banner.style.display = 'none';
+        return;
+    }
+
+    closeBtn.addEventListener('click', () => {
+        // Fade out first, then remove from the DOM once the animation finishes
+        banner.classList.add('fade-out');
+        setTimeout(() => banner.remove(), 500);
+
+        // Remember the dismissal for the rest of this browser session
         sessionStorage.setItem('notificationClosed', 'true');
     });
-    
-    // Check if notification was previously closed
-    if (sessionStorage.getItem('notificationClosed') === 'true') {
-        notificationBanner.style.display = 'none';
-    }
 }
 
-/**
- * Search Functionality
- */
+
+// =============================================================================
+// FAQ SEARCH
+// Filters FAQ items in real time based on the user's search term.
+// Matching items stay visible and their matching text gets highlighted.
+// When the user switches tabs, highlights are cleared and all items
+// are restored so the page looks normal again.
+//
+// Note: innerHTML replacement is used for highlighting. If this site
+// ever accepts user-submitted FAQ content, sanitize before rendering.
+// =============================================================================
 function initSearchFunctionality() {
-    const searchForm = document.querySelector('.search-form');
+    const searchForm  = document.querySelector('.search-form');
     const searchInput = document.querySelector('#faq-search');
-    
+
     if (!searchForm || !searchInput) return;
-    
+
     searchForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const searchTerm = searchInput.value.toLowerCase().trim();
-        
+
         if (!searchTerm) return;
-        
-        // Get all FAQ items
-        const faqItems = document.querySelectorAll('.faq-item');
+
+        const faqItems   = document.querySelectorAll('.faq-item');
         let foundResults = false;
-        
-        // First, hide all FAQ sections and show the one with results
-        document.querySelectorAll('.faq-section').forEach(section => {
-            section.classList.remove('active');
-        });
-        
-        // Reset active state on tab buttons
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        
-        // Search through FAQ items
+
+        // Reset all sections and tab highlights before applying new search results
+        document.querySelectorAll('.faq-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
         faqItems.forEach(item => {
             const question = item.querySelector('h3').textContent.toLowerCase();
-            const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
-            
-            item.style.display = 'none'; // Hide by default
-            
+            const answer   = item.querySelector('.faq-answer').textContent.toLowerCase();
+
+            // Hide every item by default; only show ones that match
+            item.style.display = 'none';
+
             if (question.includes(searchTerm) || answer.includes(searchTerm)) {
                 item.style.display = 'block';
-                
-                // Show the section containing this item
+
+                // Make sure the section containing this match is visible
                 const parentSection = item.closest('.faq-section');
                 parentSection.classList.add('active');
-                
-                // Highlight the corresponding tab
-                const tabId = parentSection.id;
-                const relatedTab = document.querySelector(`[data-target="${tabId}"]`);
+
+                // Also activate the corresponding tab so it looks selected
+                const relatedTab = document.querySelector(`[data-target="${parentSection.id}"]`);
                 if (relatedTab) relatedTab.classList.add('active');
-                
+
                 foundResults = true;
-                
-                // Highlight search terms
                 highlightSearchTerms(item, searchTerm);
             }
         });
-        
-        // Show message if no results found
-        const resultsMessage = document.querySelector('.search-results-message') || 
-                              createResultsMessage();
-        
+
+        // Show or create the results summary message below the search bar
+        const resultsMessage = document.querySelector('.search-results-message') || createResultsMessage();
+
         if (foundResults) {
             resultsMessage.textContent = `Search results for: "${searchTerm}"`;
             resultsMessage.classList.remove('error');
         } else {
             resultsMessage.textContent = `No results found for: "${searchTerm}". Please try different keywords.`;
             resultsMessage.classList.add('error');
-            
-            // Show first section if no results
+
+            // Fall back to showing the first section so the page isn't blank
             const firstSection = document.querySelector('.faq-section');
             if (firstSection) firstSection.classList.add('active');
-            
             const firstTab = document.querySelector('.tab-btn');
             if (firstTab) firstTab.classList.add('active');
         }
     });
-    
-    // Create results message element
+
+    // Creates and inserts the results summary element if it doesn't exist yet
     function createResultsMessage() {
         const message = document.createElement('div');
         message.className = 'search-results-message';
         searchForm.parentNode.insertBefore(message, searchForm.nextSibling);
         return message;
     }
-    
-    // Highlight search terms in content
+
+    // Wraps matching text in <mark> tags for visual highlighting.
+    // Stores the original HTML first so we can restore it cleanly later.
     function highlightSearchTerms(item, searchTerm) {
         const question = item.querySelector('h3');
-        const answer = item.querySelector('.faq-answer');
-        
-        // Store original text to restore later
+        const answer   = item.querySelector('.faq-answer');
+
+        // Save originals only once — prevents highlight-on-highlight stacking
         if (!question.dataset.original) {
             question.dataset.original = question.innerHTML;
-            answer.dataset.original = answer.innerHTML;
+            answer.dataset.original   = answer.innerHTML;
         }
-        
-        // Restore original content before highlighting
+
+        // Restore to original before re-applying highlights
         question.innerHTML = question.dataset.original;
-        answer.innerHTML = answer.dataset.original;
-        
-        // Highlight the search term
+        answer.innerHTML   = answer.dataset.original;
+
         const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
         question.innerHTML = question.innerHTML.replace(regex, '<mark>$1</mark>');
-        answer.innerHTML = answer.innerHTML.replace(regex, '<mark>$1</mark>');
+        answer.innerHTML   = answer.innerHTML.replace(regex, '<mark>$1</mark>');
     }
-    
-    // Helper to escape special regex characters
+
+    // Escapes special regex characters in user input to prevent regex injection
     function escapeRegExp(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
-    
-    // Clear highlights when changing tabs
+
+    // When the user switches tabs manually, clear search highlights and restore
+    // all items so the selected tab shows its full content
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.faq-item').forEach(item => {
                 item.style.display = 'block';
-                
+
                 const question = item.querySelector('h3');
-                const answer = item.querySelector('.faq-answer');
-                
+                const answer   = item.querySelector('.faq-answer');
+
                 if (question.dataset.original) {
                     question.innerHTML = question.dataset.original;
-                    answer.innerHTML = answer.dataset.original;
+                    answer.innerHTML   = answer.dataset.original;
                 }
             });
-            
-            // Remove search results message
+
+            // Clear the results summary when switching tabs
             const resultsMessage = document.querySelector('.search-results-message');
             if (resultsMessage) resultsMessage.textContent = '';
         });
     });
 }
 
-/**
- * Form Validation
- */
+
+// =============================================================================
+// FORM VALIDATION
+// Validates all forms on the page except the FAQ search bar.
+// Required fields are checked on submit, and email fields get a format check.
+// Contact and newsletter forms show a success message instead of actually
+// submitting — hook this up to a real backend (e.g. Formspree, EmailJS)
+// when you're ready to go live.
+// =============================================================================
 function initFormValidation() {
     const forms = document.querySelectorAll('form:not(.search-form)');
-    
+
     if (!forms.length) return;
-    
+
     forms.forEach(form => {
         form.addEventListener('submit', (e) => {
             let isValid = true;
-            
-            // Get all required inputs
             const requiredInputs = form.querySelectorAll('[required]');
-            
+
             requiredInputs.forEach(input => {
-                // Remove previous error messages
+                // Clear any previous error on this field before re-validating
                 const existingError = input.parentNode.querySelector('.error-message');
                 if (existingError) existingError.remove();
-                
-                // Check if input is empty
+
                 if (!input.value.trim()) {
                     isValid = false;
                     showError(input, 'This field is required');
@@ -336,68 +350,64 @@ function initFormValidation() {
                     showError(input, 'Please enter a valid email address');
                 }
             });
-            
-            // Prevent form submission if validation fails
+
             if (!isValid) {
+                // Block submission and scroll the first error into view
                 e.preventDefault();
-                
-                // Scroll to first error
                 const firstError = form.querySelector('.error-message');
                 if (firstError) {
                     firstError.parentNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             } else if (form.classList.contains('contact-form') || form.classList.contains('newsletter-form')) {
-                // For demo purposes, prevent actual form submission and show success message
+                // Intercept submission and show a friendly success state.
+                // Replace this block with a real API call (e.g. fetch + EmailJS) for production.
                 e.preventDefault();
                 showFormSuccess(form);
             }
         });
     });
-    
-    // Helper function to show error message
+
+    // Appends an inline error message below the invalid field
     function showError(input, message) {
-        const errorElement = document.createElement('div');
-        errorElement.className = 'error-message';
-        errorElement.textContent = message;
-        
-        input.parentNode.appendChild(errorElement);
+        const errorEl = document.createElement('div');
+        errorEl.className = 'error-message';
+        errorEl.textContent = message;
+
+        input.parentNode.appendChild(errorEl);
         input.setAttribute('aria-invalid', 'true');
         input.classList.add('input-error');
     }
-    
-    // Helper function to validate email
+
+    // Basic email format check — not exhaustive, but catches obvious typos
     function isValidEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
-    
-    // Show success message after form submission
+
+    // Replaces the form with a thank-you message and a button to submit again
     function showFormSuccess(form) {
-        // Hide the form
         form.style.display = 'none';
-        
-        // Create success message
+
         const successMessage = document.createElement('div');
         successMessage.className = 'success-message';
-        
+
         if (form.classList.contains('contact-form')) {
             successMessage.innerHTML = `
                 <h3>Thank you for your message!</h3>
-                <p>We have received your inquiry and will respond within 24 hours.</p>
+                <p>We've received your inquiry and will respond within 24 hours.</p>
             `;
         } else if (form.classList.contains('newsletter-form')) {
             successMessage.innerHTML = `
                 <h3>Successfully subscribed!</h3>
-                <p>Thank you for subscribing to our newsletter. You'll receive updates about Taniti Island soon.</p>
+                <p>Thanks for signing up — you'll hear from us soon about all things Taniti.</p>
             `;
         } else {
             successMessage.innerHTML = `
-                <h3>Form submitted successfully!</h3>
+                <h3>Submitted successfully!</h3>
                 <p>Thank you for your submission.</p>
             `;
         }
-        
-        // Add button to reset form
+
+        // Give the user a way to submit another message without refreshing the page
         const resetButton = document.createElement('button');
         resetButton.className = 'btn btn-primary mt-3';
         resetButton.textContent = 'Send another message';
@@ -406,21 +416,26 @@ function initFormValidation() {
             form.style.display = 'block';
             successMessage.remove();
         });
-        
+
         successMessage.appendChild(resetButton);
         form.parentNode.appendChild(successMessage);
     }
 }
 
-/**
- * Gallery Lightbox
- */
+
+// =============================================================================
+// GALLERY LIGHTBOX
+// Opens a full-screen overlay when a gallery image is clicked, with
+// previous/next navigation and keyboard support (arrow keys + Escape).
+// Body scrolling is locked while the lightbox is open so the overlay
+// doesn't shift under the user's finger on mobile.
+// =============================================================================
 function initGalleryLightbox() {
     const galleryItems = document.querySelectorAll('.gallery-item img');
-    
+
     if (!galleryItems.length) return;
-    
-    // Create lightbox elements
+
+    // Build the lightbox overlay once and append it to the body
     const lightbox = document.createElement('div');
     lightbox.className = 'lightbox';
     lightbox.innerHTML = `
@@ -432,26 +447,25 @@ function initGalleryLightbox() {
             <button class="lightbox-next" aria-label="Next image">&gt;</button>
         </div>
     `;
-        document.body.appendChild(lightbox);
-    
-    // Get lightbox elements
-    const lightboxImage = lightbox.querySelector('.lightbox-image');
+    document.body.appendChild(lightbox);
+
+    const lightboxImage   = lightbox.querySelector('.lightbox-image');
     const lightboxCaption = lightbox.querySelector('.lightbox-caption');
-    const lightboxClose = lightbox.querySelector('.lightbox-close');
-    const lightboxPrev = lightbox.querySelector('.lightbox-prev');
-    const lightboxNext = lightbox.querySelector('.lightbox-next');
-    
+    const lightboxClose   = lightbox.querySelector('.lightbox-close');
+    const lightboxPrev    = lightbox.querySelector('.lightbox-prev');
+    const lightboxNext    = lightbox.querySelector('.lightbox-next');
+
     let currentIndex = 0;
-    
-    // Open lightbox when clicking on gallery image
+
+    // Attach click and keyboard listeners to each gallery image
     galleryItems.forEach((img, index) => {
         img.addEventListener('click', (e) => {
             e.preventDefault();
             currentIndex = index;
             openLightbox(img);
         });
-        
-        // Add keyboard accessibility
+
+        // Make the parent wrapper keyboard-focusable so tab users can open images too
         img.parentElement.setAttribute('tabindex', '0');
         img.parentElement.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
@@ -461,139 +475,130 @@ function initGalleryLightbox() {
             }
         });
     });
-    
-    // Open lightbox with selected image
+
     function openLightbox(img) {
         lightboxImage.src = img.src;
         lightboxImage.alt = img.alt;
-        
-        // Get caption if available
+
+        // Show the caption if the gallery item includes one
         const caption = img.closest('.gallery-item').querySelector('.gallery-caption');
         lightboxCaption.textContent = caption ? caption.textContent : '';
-        
-        // Show lightbox
+
         lightbox.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent scrolling
-        
-        // Focus on close button for accessibility
-        lightboxClose.focus();
-        
-        // Update navigation buttons
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling while lightbox is open
+        lightboxClose.focus();                    // Move focus to close button for keyboard/screen reader users
         updateNavButtons();
     }
-    
-    // Close lightbox
+
+    // Close when clicking the X button or the backdrop outside the image
     lightboxClose.addEventListener('click', closeLightbox);
     lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
-            closeLightbox();
-        }
+        if (e.target === lightbox) closeLightbox();
     });
-    
+
     function closeLightbox() {
         lightbox.classList.remove('active');
-        document.body.style.overflow = ''; // Restore scrolling
-        
-        // Return focus to the image that was clicked
-        galleryItems[currentIndex].parentElement.focus();
+        document.body.style.overflow = '';  // Restore normal scrolling
+        galleryItems[currentIndex].parentElement.focus(); // Return focus to the last viewed item
     }
-    
-    // Navigate between images
+
     lightboxPrev.addEventListener('click', showPrevImage);
     lightboxNext.addEventListener('click', showNextImage);
-    
+
     function showPrevImage() {
+        // Wrap around to the last image if already at the first
         currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
         openLightbox(galleryItems[currentIndex]);
     }
-    
+
     function showNextImage() {
+        // Wrap around to the first image if already at the last
         currentIndex = (currentIndex + 1) % galleryItems.length;
         openLightbox(galleryItems[currentIndex]);
     }
-    
-    // Update navigation buttons visibility
+
+    // Only show nav arrows when there's more than one image to navigate
     function updateNavButtons() {
-        lightboxPrev.style.display = galleryItems.length > 1 ? 'block' : 'none';
-        lightboxNext.style.display = galleryItems.length > 1 ? 'block' : 'none';
+        const show = galleryItems.length > 1 ? 'block' : 'none';
+        lightboxPrev.style.display = show;
+        lightboxNext.style.display = show;
     }
-    
-    // Keyboard navigation
+
+    // Keyboard shortcuts: Escape to close, arrow keys to navigate
     lightbox.addEventListener('keydown', (e) => {
         if (!lightbox.classList.contains('active')) return;
-        
+
         switch (e.key) {
-            case 'Escape':
-                closeLightbox();
-                break;
-            case 'ArrowLeft':
-                showPrevImage();
-                break;
-            case 'ArrowRight':
-                showNextImage();
-                break;
+            case 'Escape':    closeLightbox();  break;
+            case 'ArrowLeft': showPrevImage();  break;
+            case 'ArrowRight':showNextImage();  break;
         }
     });
 }
 
-/**
- * Smooth Scrolling for Anchor Links
- */
+
+// =============================================================================
+// SMOOTH SCROLLING
+// Intercepts clicks on internal anchor links (e.g. href="#section") and
+// smoothly scrolls to the target instead of jumping. The header height is
+// subtracted from the scroll position so content doesn't hide behind the
+// sticky nav bar. Focus is moved to the target element for accessibility.
+// =============================================================================
 function initSmoothScrolling() {
+    // Select all anchor links that point to an ID on the same page
     const anchorLinks = document.querySelectorAll('a[href^="#"]:not([href="#"])');
-    
+
     anchorLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            const targetId = link.getAttribute('href');
+            const targetId      = link.getAttribute('href');
             const targetElement = document.querySelector(targetId);
-            
-            if (targetElement) {
-                e.preventDefault();
-                
-                // Get header height for offset
-                const headerHeight = document.querySelector('.site-header')?.offsetHeight || 0;
-                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-                
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-                
-                // Update URL without scrolling
-                history.pushState(null, null, targetId);
-                
-                // Set focus to the target element for accessibility
-                targetElement.setAttribute('tabindex', '-1');
-                targetElement.focus();
-                
-                // Remove tabindex after focus
-                setTimeout(() => {
-                    targetElement.removeAttribute('tabindex');
-                }, 1000);
-            }
+
+            if (!targetElement) return;
+
+            e.preventDefault();
+
+            // Offset by the sticky header height so the section isn't hidden underneath it
+            const headerHeight  = document.querySelector('.site-header')?.offsetHeight || 0;
+            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+
+            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+
+            // Update the URL bar to reflect the new anchor without causing a scroll jump
+            history.pushState(null, null, targetId);
+
+            // Briefly make the target focusable, then move focus to it for screen readers
+            targetElement.setAttribute('tabindex', '-1');
+            targetElement.focus();
+            setTimeout(() => targetElement.removeAttribute('tabindex'), 1000);
         });
     });
 }
 
-/**
- * Weather Widget
- */
+
+// =============================================================================
+// WEATHER WIDGET
+// Displays a 5-day forecast in the weather widget container.
+//
+// ⚠️  TODO: Replace the mock data below with a real API call.
+// Recommended free option: Open-Meteo (https://open-meteo.com)
+// No API key required. Example endpoint for Taniti's approximate coordinates:
+//   https://api.open-meteo.com/v1/forecast?latitude=14.0&longitude=145.0
+//   &daily=temperature_2m_max,weathercode&temperature_unit=fahrenheit&timezone=Pacific/Guam
+// =============================================================================
 function initWeatherWidget() {
     const weatherWidget = document.querySelector('.weather-widget');
-    
+
     if (!weatherWidget) return;
-    
-    // For demo purposes, we'll use mock data
-    // In a real application, you would fetch this from a weather API
+
+    // Placeholder forecast — swap this array with real API data when ready
     const weatherData = [
-        { date: 'Today', icon: '☀️', temp: '84°F', desc: 'Sunny' },
-        { date: 'Tomorrow', icon: '⛅', temp: '82°F', desc: 'Partly Cloudy' },
-        { date: 'Wed', icon: '🌦️', temp: '79°F', desc: 'Scattered Showers' },
-        { date: 'Thu', icon: '☀️', temp: '83°F', desc: 'Sunny' },
-        { date: 'Fri', icon: '☀️', temp: '85°F', desc: 'Sunny' }
+        { date: 'Today',    icon: '☀️',  temp: '84°F', desc: 'Sunny' },
+        { date: 'Tomorrow', icon: '⛅',  temp: '82°F', desc: 'Partly Cloudy' },
+        { date: 'Wed',      icon: '🌦️', temp: '79°F', desc: 'Scattered Showers' },
+        { date: 'Thu',      icon: '☀️',  temp: '83°F', desc: 'Sunny' },
+        { date: 'Fri',      icon: '☀️',  temp: '85°F', desc: 'Sunny' },
     ];
-    
-    // Populate weather widget
+
     weatherData.forEach(day => {
         const dayElement = document.createElement('div');
         dayElement.className = 'weather-day';
@@ -605,139 +610,137 @@ function initWeatherWidget() {
         `;
         weatherWidget.appendChild(dayElement);
     });
-    
-    // Add last updated info
+
+    // Show a timestamp so users know how fresh the data is
     const lastUpdated = document.createElement('div');
     lastUpdated.className = 'weather-updated mt-2 text-center fs-small';
     lastUpdated.textContent = `Last updated: ${new Date().toLocaleString()}`;
     weatherWidget.parentNode.appendChild(lastUpdated);
 }
 
-/**
- * Itinerary Builder
- */
+
+// =============================================================================
+// ITINERARY BUILDER
+// Lets visitors drag activities into a day-by-day trip plan, then save or
+// print it. Activities are sorted chronologically within each day automatically.
+//
+// The save flow opens a modal with print and email options. The email feature
+// currently simulates a send — hook it up to a backend service (e.g. EmailJS,
+// SendGrid) to make it functional in production.
+// =============================================================================
 function initItineraryBuilder() {
     const itineraryBuilder = document.querySelector('.itinerary-builder');
-    
+
     if (!itineraryBuilder) return;
-    
-    const daySelector = itineraryBuilder.querySelector('.day-selector');
+
+    const daySelector      = itineraryBuilder.querySelector('.day-selector');
     const activitySelector = itineraryBuilder.querySelector('.activity-selector');
     const itineraryPreview = itineraryBuilder.querySelector('.itinerary-preview');
-    
-    // Sample activities data
+
+    // Activity catalogue — each entry has a unique ID, display name, time slot, and description.
+    // To add more activities, just push new objects into the relevant category array.
     const activitiesByCategory = {
         beaches: [
-            { id: 'b1', name: 'Taniti Beach', time: '9:00 AM - 12:00 PM', desc: 'Relaxing at the main beach' },
-            { id: 'b2', name: 'Hidden Cove', time: '2:00 PM - 5:00 PM', desc: 'Secluded beach with crystal waters' }
+            { id: 'b1', name: 'Taniti Beach',  time: '9:00 AM - 12:00 PM', desc: 'Relaxing at the main beach' },
+            { id: 'b2', name: 'Hidden Cove',   time: '2:00 PM - 5:00 PM',  desc: 'Secluded beach with crystal waters' },
         ],
         hiking: [
             { id: 'h1', name: 'Volcano Trail', time: '8:00 AM - 12:00 PM', desc: 'Moderate hike with amazing views' },
-            { id: 'h2', name: 'Jungle Trek', time: '1:00 PM - 4:00 PM', desc: 'Guided tour through rainforest' }
+            { id: 'h2', name: 'Jungle Trek',   time: '1:00 PM - 4:00 PM',  desc: 'Guided tour through rainforest' },
         ],
         dining: [
-            { id: 'd1', name: 'Seafood Dinner', time: '6:00 PM - 8:00 PM', desc: 'Fresh catch at coastal restaurant' },
-            { id: 'd2', name: 'Local Cuisine', time: '12:00 PM - 2:00 PM', desc: 'Traditional lunch at village market' }
+            { id: 'd1', name: 'Seafood Dinner', time: '6:00 PM - 8:00 PM',  desc: 'Fresh catch at coastal restaurant' },
+            { id: 'd2', name: 'Local Cuisine',  time: '12:00 PM - 2:00 PM', desc: 'Traditional lunch at village market' },
         ],
         tours: [
-            { id: 't1', name: 'Island Tour', time: '9:00 AM - 3:00 PM', desc: 'Comprehensive tour of main attractions' },
-            { id: 't2', name: 'Boat Excursion', time: '10:00 AM - 2:00 PM', desc: 'Snorkeling and island hopping' }
-        ]
+            { id: 't1', name: 'Island Tour',    time: '9:00 AM - 3:00 PM',  desc: 'Comprehensive tour of main attractions' },
+            { id: 't2', name: 'Boat Excursion', time: '10:00 AM - 2:00 PM', desc: 'Snorkeling and island hopping' },
+        ],
     };
-    
-    // Initialize days (for a week-long trip)
+
+    // Build the day tab buttons (Day 1 through Day 7)
     for (let i = 1; i <= 7; i++) {
         const dayBtn = document.createElement('button');
-        dayBtn.className = 'day-btn' + (i === 1 ? ' active' : '');
+        dayBtn.className   = 'day-btn' + (i === 1 ? ' active' : '');
         dayBtn.textContent = `Day ${i}`;
         dayBtn.dataset.day = i;
         daySelector.appendChild(dayBtn);
     }
-    
-    // Initialize activity categories
+
+    // Render the activity picker grouped by category
     Object.keys(activitiesByCategory).forEach(category => {
-        const categoryHeading = document.createElement('h4');
-        categoryHeading.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-        activitySelector.appendChild(categoryHeading);
-        
-        const activitiesContainer = document.createElement('div');
-        activitiesContainer.className = 'd-flex flex-wrap gap-2 mb-3';
-        
+        const heading = document.createElement('h4');
+        heading.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+        activitySelector.appendChild(heading);
+
+        const container = document.createElement('div');
+        container.className = 'd-flex flex-wrap gap-2 mb-3';
+
         activitiesByCategory[category].forEach(activity => {
-            const activityOption = document.createElement('div');
-            activityOption.className = 'activity-option';
-            activityOption.dataset.id = activity.id;
-            activityOption.dataset.category = category;
-            activityOption.innerHTML = `
+            const option = document.createElement('div');
+            option.className        = 'activity-option';
+            option.dataset.id       = activity.id;
+            option.dataset.category = category;
+            option.innerHTML = `
                 <strong>${activity.name}</strong>
                 <div>${activity.time}</div>
             `;
-            activitiesContainer.appendChild(activityOption);
+            container.appendChild(option);
         });
-        
-        activitySelector.appendChild(activitiesContainer);
+
+        activitySelector.appendChild(container);
     });
-    
-    // Initialize itinerary days
+
+    // Build one itinerary panel for each day, hidden by default except Day 1
     for (let i = 1; i <= 7; i++) {
         const daySection = document.createElement('div');
-        daySection.className = 'itinerary-day' + (i === 1 ? '' : ' hidden');
+        daySection.className   = 'itinerary-day' + (i === 1 ? '' : ' hidden');
         daySection.dataset.day = i;
         daySection.innerHTML = `
             <h4>Day ${i} Itinerary</h4>
             <div class="itinerary-items"></div>
-            <div class="empty-message">No activities selected for this day. Click on activities to add them.</div>
+            <div class="empty-message">No activities yet — click any activity above to add it here.</div>
         `;
         itineraryPreview.appendChild(daySection);
     }
-    
-    // Day selection
+
+    // Switch the visible itinerary panel when a day tab is clicked
     daySelector.addEventListener('click', (e) => {
-        if (e.target.classList.contains('day-btn')) {
-            const selectedDay = e.target.dataset.day;
-            
-            // Update active button
-            daySelector.querySelectorAll('.day-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            e.target.classList.add('active');
-            
-            // Show corresponding itinerary
-            itineraryPreview.querySelectorAll('.itinerary-day').forEach(day => {
-                day.classList.add('hidden');
-                if (day.dataset.day === selectedDay) {
-                    day.classList.remove('hidden');
-                }
-            });
-        }
+        if (!e.target.classList.contains('day-btn')) return;
+
+        const selectedDay = e.target.dataset.day;
+
+        daySelector.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
+        e.target.classList.add('active');
+
+        itineraryPreview.querySelectorAll('.itinerary-day').forEach(day => {
+            day.classList.toggle('hidden', day.dataset.day !== selectedDay);
+        });
     });
-    
-    // Activity selection
+
+    // Add the clicked activity to the currently selected day's itinerary
     activitySelector.addEventListener('click', (e) => {
         const activityOption = e.target.closest('.activity-option');
         if (!activityOption) return;
-        
+
         const activityId = activityOption.dataset.id;
-        const category = activityOption.dataset.category;
-        const activity = activitiesByCategory[category].find(a => a.id === activityId);
-        
-        // Get current day
-        const currentDay = daySelector.querySelector('.day-btn.active').dataset.day;
-        const daySection = itineraryPreview.querySelector(`.itinerary-day[data-day="${currentDay}"]`);
+        const category   = activityOption.dataset.category;
+        const activity   = activitiesByCategory[category].find(a => a.id === activityId);
+
+        const currentDay     = daySelector.querySelector('.day-btn.active').dataset.day;
+        const daySection     = itineraryPreview.querySelector(`.itinerary-day[data-day="${currentDay}"]`);
         const itemsContainer = daySection.querySelector('.itinerary-items');
-        const emptyMessage = daySection.querySelector('.empty-message');
-        
-        // Check if activity already added
-        const existingItem = itemsContainer.querySelector(`[data-id="${activityId}"]`);
-        if (existingItem) {
+        const emptyMessage   = daySection.querySelector('.empty-message');
+
+        // Prevent duplicates — each activity can only appear once per day
+        if (itemsContainer.querySelector(`[data-id="${activityId}"]`)) {
             alert('This activity is already in your itinerary for this day.');
             return;
         }
-        
-        // Add activity to itinerary
+
         const itineraryItem = document.createElement('div');
-        itineraryItem.className = 'itinerary-item';
-        itineraryItem.dataset.id = activityId;
+        itineraryItem.className   = 'itinerary-item';
+        itineraryItem.dataset.id  = activityId;
         itineraryItem.innerHTML = `
             <div class="itinerary-time">${activity.time}</div>
             <div class="itinerary-details">
@@ -747,305 +750,254 @@ function initItineraryBuilder() {
             <button class="remove-activity" aria-label="Remove activity">&times;</button>
         `;
         itemsContainer.appendChild(itineraryItem);
-        
-        // Hide empty message if there are items
+
+        // Hide the placeholder message once there's at least one activity
         if (itemsContainer.children.length > 0) {
             emptyMessage.style.display = 'none';
         }
-        
-        // Sort items by time
+
+        // Keep activities in chronological order within the day
         sortItineraryItems(itemsContainer);
     });
-    
-    // Remove activity
+
+    // Remove an activity when the × button is clicked
     itineraryPreview.addEventListener('click', (e) => {
-        if (e.target.classList.contains('remove-activity')) {
-            const item = e.target.closest('.itinerary-item');
-            const itemsContainer = item.parentNode;
-            const emptyMessage = itemsContainer.parentNode.querySelector('.empty-message');
-            
-            item.remove();
-            
-            // Show empty message if no items
-            if (itemsContainer.children.length === 0) {
-                emptyMessage.style.display = 'block';
-            }
+        if (!e.target.classList.contains('remove-activity')) return;
+
+        const item           = e.target.closest('.itinerary-item');
+        const itemsContainer = item.parentNode;
+        const emptyMessage   = itemsContainer.parentNode.querySelector('.empty-message');
+
+        item.remove();
+
+        // Show the placeholder message again if the list is now empty
+        if (itemsContainer.children.length === 0) {
+            emptyMessage.style.display = 'block';
         }
     });
-    
-    // Sort itinerary items by time
+
+    // Re-sorts all items in a container by their start time (earliest first)
     function sortItineraryItems(container) {
         const items = Array.from(container.children);
-        
+
         items.sort((a, b) => {
-            const timeA = a.querySelector('.itinerary-time').textContent;
-            const timeB = b.querySelector('.itinerary-time').textContent;
-            
-            // Extract start time for comparison
-            const startTimeA = timeA.split(' - ')[0];
-            const startTimeB = timeB.split(' - ')[0];
-            
-            return convertTimeToMinutes(startTimeA) - convertTimeToMinutes(startTimeB);
+            const startA = a.querySelector('.itinerary-time').textContent.split(' - ')[0];
+            const startB = b.querySelector('.itinerary-time').textContent.split(' - ')[0];
+            return convertTimeToMinutes(startA) - convertTimeToMinutes(startB);
         });
-        
-        // Clear and re-append in sorted order
+
+        // Re-append in sorted order (clears and rebuilds the list)
         container.innerHTML = '';
         items.forEach(item => container.appendChild(item));
     }
-    
-    // Helper to convert time to minutes for comparison
+
+    // Converts a 12-hour time string like "2:30 PM" into total minutes for easy comparison
     function convertTimeToMinutes(timeStr) {
         const [time, period] = timeStr.split(' ');
         let [hours, minutes] = time.split(':').map(Number);
-        
-        if (period === 'PM' && hours < 12) {
-            hours += 12;
-        } else if (period === 'AM' && hours === 12) {
-            hours = 0;
-        }
-        
+
+        if (period === 'PM' && hours < 12) hours += 12;
+        if (period === 'AM' && hours === 12) hours = 0;
+
         return hours * 60 + minutes;
     }
-    
-    // Save itinerary
+
+    // Save button — builds a printable summary and opens a modal
     const saveButton = itineraryBuilder.querySelector('.save-itinerary button');
-    if (saveButton) {
-        saveButton.addEventListener('click', () => {
-                        // In a real application, this would save to a database or local storage
-            // For demo purposes, we'll just show a success message
-            
-            // Check if there are any activities in the itinerary
-            let hasActivities = false;
-            itineraryPreview.querySelectorAll('.itinerary-items').forEach(container => {
-                if (container.children.length > 0) {
-                    hasActivities = true;
-                }
-            });
-            
-            if (!hasActivities) {
-                alert('Please add at least one activity to your itinerary before saving.');
-                return;
+    if (!saveButton) return;
+
+    saveButton.addEventListener('click', () => {
+        // Don't let the user save an empty itinerary
+        let hasActivities = false;
+        itineraryPreview.querySelectorAll('.itinerary-items').forEach(container => {
+            if (container.children.length > 0) hasActivities = true;
+        });
+
+        if (!hasActivities) {
+            alert('Please add at least one activity to your itinerary before saving.');
+            return;
+        }
+
+        // Build a clean, print-friendly copy of the itinerary
+        const printableItinerary = document.createElement('div');
+        printableItinerary.className = 'printable-itinerary';
+        printableItinerary.innerHTML = '<h2>Your Taniti Island Itinerary</h2>';
+
+        itineraryPreview.querySelectorAll('.itinerary-day').forEach(day => {
+            const dayCopy = day.cloneNode(true);
+            dayCopy.classList.remove('hidden');
+
+            const items = dayCopy.querySelector('.itinerary-items');
+            if (items.children.length === 0) {
+                dayCopy.querySelector('.empty-message').textContent = 'No activities planned for this day.';
+            } else {
+                dayCopy.querySelector('.empty-message').style.display = 'none';
             }
-            
-            // Create a printable version
-            const printableItinerary = document.createElement('div');
-            printableItinerary.className = 'printable-itinerary';
-            printableItinerary.innerHTML = '<h2>Your Taniti Island Itinerary</h2>';
-            
-            // Copy all day sections
-            itineraryPreview.querySelectorAll('.itinerary-day').forEach(day => {
-                const dayCopy = day.cloneNode(true);
-                dayCopy.classList.remove('hidden');
-                
-                // Remove empty days
-                const items = dayCopy.querySelector('.itinerary-items');
-                if (items.children.length === 0) {
-                    dayCopy.querySelector('.empty-message').textContent = 'No activities planned for this day.';
-                } else {
-                    dayCopy.querySelector('.empty-message').style.display = 'none';
+
+            // Remove the interactive remove buttons from the printed version
+            dayCopy.querySelectorAll('.remove-activity').forEach(btn => btn.remove());
+            printableItinerary.appendChild(dayCopy);
+        });
+
+        printableItinerary.innerHTML += `
+            <div class="itinerary-footer mt-4">
+                <p>Thank you for planning your trip to Taniti Island!</p>
+                <p>For assistance, contact our concierge at: concierge@tanitiisland.com</p>
+            </div>
+        `;
+
+        // Show the itinerary in a modal with print and email options
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Your Itinerary is Ready!</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary print-btn">Print Itinerary</button>
+                    <button class="btn btn-primary email-btn">Email to Me</button>
+                </div>
+            </div>
+        `;
+
+        modal.querySelector('.modal-body').appendChild(printableItinerary);
+        document.body.appendChild(modal);
+
+        // Small delay lets the browser paint before triggering the CSS transition
+        setTimeout(() => modal.classList.add('show'), 10);
+
+        modal.querySelector('.modal-close').addEventListener('click', () => {
+            modal.classList.remove('show');
+            setTimeout(() => modal.remove(), 300);
+        });
+
+        // Opens the itinerary in a new tab formatted for printing
+        modal.querySelector('.print-btn').addEventListener('click', () => {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Taniti Island Itinerary</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                        h2, h4 { color: #0a7e85; }
+                        .itinerary-day { margin-bottom: 30px; }
+                        .itinerary-item { display: flex; margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; }
+                        .itinerary-time { min-width: 120px; font-weight: bold; color: #0a7e85; }
+                        .itinerary-footer { margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px; }
+                        @media print { body { font-size: 12pt; } .itinerary-day { page-break-inside: avoid; } }
+                    </style>
+                </head>
+                <body>${printableItinerary.innerHTML}</body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+
+            // Small delay ensures the content is fully rendered before the print dialog opens
+            setTimeout(() => printWindow.print(), 500);
+        });
+
+        // Email flow — collects an address and simulates sending.
+        // TODO: Replace the setTimeout mock with a real email API call (e.g. EmailJS).
+        modal.querySelector('.email-btn').addEventListener('click', () => {
+            const modalFooter = modal.querySelector('.modal-footer');
+            modalFooter.innerHTML = `
+                <div class="form-row">
+                    <label for="email">Your Email Address:</label>
+                    <input type="email" id="email" required placeholder="Enter your email">
+                </div>
+                <button class="btn btn-primary send-email-btn">Send Itinerary</button>
+            `;
+
+            modalFooter.querySelector('.send-email-btn').addEventListener('click', () => {
+                const emailInput = modalFooter.querySelector('#email');
+                if (!emailInput.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
+                    emailInput.focus();
+                    return;
                 }
-                
-                // Remove remove buttons
-                dayCopy.querySelectorAll('.remove-activity').forEach(btn => btn.remove());
-                
-                printableItinerary.appendChild(dayCopy);
-            });
-            
-            // Add contact information
-            printableItinerary.innerHTML += `
-                <div class="itinerary-footer mt-4">
-                    <p>Thank you for planning your trip to Taniti Island!</p>
-                    <p>For assistance, contact our concierge at: concierge@tanitiisland.com</p>
-                </div>
-            `;
-            
-            // Create a modal to display the itinerary
-            const modal = document.createElement('div');
-            modal.className = 'modal';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Your Itinerary is Ready!</h3>
-                        <button class="modal-close">&times;</button>
-                    </div>
-                    <div class="modal-body"></div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary print-btn">Print Itinerary</button>
-                        <button class="btn btn-primary email-btn">Email to Me</button>
-                    </div>
-                </div>
-            `;
-            
-            // Add the printable itinerary to the modal
-            modal.querySelector('.modal-body').appendChild(printableItinerary);
-            
-            // Add the modal to the page
-            document.body.appendChild(modal);
-            
-            // Show the modal
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 10);
-            
-            // Close modal
-            modal.querySelector('.modal-close').addEventListener('click', () => {
-                modal.classList.remove('show');
+
+                const email = emailInput.value;
+                modalFooter.innerHTML = '<p class="text-center">Sending itinerary to your email...</p>';
+
+                // Simulated delay — replace with actual API call for production
                 setTimeout(() => {
-                    modal.remove();
-                }, 300);
-            });
-            
-            // Print functionality
-            modal.querySelector('.print-btn').addEventListener('click', () => {
-                const printContent = printableItinerary.innerHTML;
-                const printWindow = window.open('', '_blank');
-                
-                printWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>Taniti Island Itinerary</title>
-                        <style>
-                            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                            h2, h4 { color: #0a7e85; }
-                            .itinerary-day { margin-bottom: 30px; }
-                            .itinerary-item { display: flex; margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; }
-                            .itinerary-time { min-width: 120px; font-weight: bold; color: #0a7e85; }
-                            .itinerary-footer { margin-top: 50px; border-top: 1px solid #ddd; padding-top: 20px; }
-                            @media print {
-                                body { font-size: 12pt; }
-                                .itinerary-day { page-break-inside: avoid; }
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        ${printContent}
-                    </body>
-                    </html>
-                `);
-                
-                printWindow.document.close();
-                printWindow.focus();
-                
-                // Print after a short delay to ensure content is loaded
-                setTimeout(() => {
-                    printWindow.print();
-                }, 500);
-            });
-            
-            // Email functionality (demo)
-            modal.querySelector('.email-btn').addEventListener('click', () => {
-                const emailForm = document.createElement('form');
-                emailForm.className = 'email-form mt-3';
-                emailForm.innerHTML = `
-                    <div class="form-row">
-                        <label for="email">Your Email Address:</label>
-                        <input type="email" id="email" required placeholder="Enter your email">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Send Itinerary</button>
-                `;
-                
-                // Replace buttons with form
-                const modalFooter = modal.querySelector('.modal-footer');
-                modalFooter.innerHTML = '';
-                modalFooter.appendChild(emailForm);
-                
-                // Handle form submission
-                emailForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const email = emailForm.querySelector('#email').value;
-                    
-                    // Show sending state
-                    modalFooter.innerHTML = '<p class="text-center">Sending itinerary to your email...</p>';
-                    
-                    // Simulate sending delay
-                    setTimeout(() => {
-                        modalFooter.innerHTML = `
-                            <div class="success-message text-center">
-                                <p>Your itinerary has been sent to: ${email}</p>
-                                <p class="mt-2">Please check your inbox (and spam folder) for the email.</p>
-                                <button class="btn btn-secondary mt-3 close-modal-btn">Close</button>
-                            </div>
-                        `;
-                        
-                        // Add event listener to new close button
-                        modalFooter.querySelector('.close-modal-btn').addEventListener('click', () => {
-                            modal.classList.remove('show');
-                            setTimeout(() => {
-                                modal.remove();
-                            }, 300);
-                        });
-                    }, 2000);
-                });
+                    modalFooter.innerHTML = `
+                        <div class="success-message text-center">
+                            <p>Your itinerary has been sent to: ${email}</p>
+                            <p class="mt-2">Please check your inbox (and spam folder) if it doesn't arrive in a few minutes.</p>
+                            <button class="btn btn-secondary mt-3 close-modal-btn">Close</button>
+                        </div>
+                    `;
+                    modalFooter.querySelector('.close-modal-btn').addEventListener('click', () => {
+                        modal.classList.remove('show');
+                        setTimeout(() => modal.remove(), 300);
+                    });
+                }, 2000);
             });
         });
-    }
+    });
 }
 
-/**
- * Map Interaction
- */
+
+// =============================================================================
+// MAP INTERACTION
+// Renders an interactive island map with clickable location pins.
+// Each pin shows a tooltip on hover and a detailed info card on click.
+// The legend lets users filter pins by category (beach, dining, etc.).
+//
+// ⚠️  TODO: The map image path below currently points to a placeholder.
+// Update the src to "Assets/interactivemap.png" to use the actual map file,
+// or swap the <img> approach for Leaflet.js to add full zoom/pan support.
+// =============================================================================
 function initMapInteraction() {
     const mapContainer = document.querySelector('.map-container');
-    
+
     if (!mapContainer) return;
-    
+
     const mapPlaceholder = mapContainer.querySelector('.map-placeholder');
-    const mapLegend = mapContainer.querySelector('.map-legend');
-    
+    const mapLegend      = mapContainer.querySelector('.map-legend');
+
     if (!mapPlaceholder) return;
-    
-    // For demo purposes, we'll use a placeholder instead of an actual map
-    // In a real application, you would initialize a map library like Google Maps or Leaflet
-    
+
+    // Render the map image and overlay the location pins on top of it.
+    // Pin positions (top/left %) are relative to the map image dimensions.
     mapPlaceholder.innerHTML = `
         <div class="map-demo">
-            <img src="images/taniti-map.jpg" alt="Map of Taniti Island" class="map-image">
+            <img src="Assets/interactivemap.png" alt="Map of Taniti Island" class="map-image">
             <div class="map-overlay">
-                <div class="map-point" style="top: 30%; left: 40%;" data-type="beach" title="Taniti Beach"></div>
-                <div class="map-point" style="top: 45%; left: 60%;" data-type="dining" title="Seafood Restaurant"></div>
-                <div class="map-point" style="top: 60%; left: 30%;" data-type="activity" title="Volcano Hiking"></div>
-                <div class="map-point" style="top: 35%; left: 70%;" data-type="shopping" title="Local Market"></div>
+                <div class="map-point" style="top: 30%; left: 40%;" data-type="beach"         title="Taniti Beach"></div>
+                <div class="map-point" style="top: 45%; left: 60%;" data-type="dining"        title="Seafood Restaurant"></div>
+                <div class="map-point" style="top: 60%; left: 30%;" data-type="activity"      title="Volcano Hiking"></div>
+                <div class="map-point" style="top: 35%; left: 70%;" data-type="shopping"      title="Local Market"></div>
                 <div class="map-point" style="top: 50%; left: 50%;" data-type="accommodation" title="Taniti Resort"></div>
-                <div class="map-point" style="top: 25%; left: 55%;" data-type="attraction" title="Cultural Center"></div>
+                <div class="map-point" style="top: 25%; left: 55%;" data-type="attraction"    title="Cultural Center"></div>
             </div>
         </div>
     `;
-    
-    // Add interaction to map points
+
     const mapPoints = mapPlaceholder.querySelectorAll('.map-point');
-    
+
     mapPoints.forEach(point => {
-        // Create tooltip
+        // Each pin gets a tooltip that shows the location name on hover or focus
         const tooltip = document.createElement('div');
-        tooltip.className = 'map-tooltip';
+        tooltip.className   = 'map-tooltip';
         tooltip.textContent = point.getAttribute('title');
         point.appendChild(tooltip);
-        
-        // Show tooltip on hover/focus
-        point.addEventListener('mouseenter', () => {
-            tooltip.style.display = 'block';
-        });
-        
-        point.addEventListener('mouseleave', () => {
-            tooltip.style.display = 'none';
-        });
-        
-        // Make points focusable and handle keyboard events
+
+        point.addEventListener('mouseenter', () => tooltip.style.display = 'block');
+        point.addEventListener('mouseleave', () => tooltip.style.display = 'none');
+
+        // Make pins keyboard-accessible by adding them to the tab order
         point.setAttribute('tabindex', '0');
-        point.addEventListener('focus', () => {
-            tooltip.style.display = 'block';
-        });
-        
-        point.addEventListener('blur', () => {
-            tooltip.style.display = 'none';
-        });
-        
-        // Show more info when clicked
-        point.addEventListener('click', () => {
-            showPointDetails(point);
-        });
-        
+        point.addEventListener('focus', () => tooltip.style.display = 'block');
+        point.addEventListener('blur',  () => tooltip.style.display = 'none');
+
+        point.addEventListener('click', () => showPointDetails(point));
         point.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -1053,171 +1005,124 @@ function initMapInteraction() {
             }
         });
     });
-    
-    // Show details for a map point
+
+    // Builds and positions a contextual info card when a map pin is clicked
     function showPointDetails(point) {
-        const type = point.dataset.type;
+        const type  = point.dataset.type;
         const title = point.getAttribute('title');
-        
-        // Create info card
+
         const infoCard = document.createElement('div');
         infoCard.className = 'map-info-card';
-        
-        // Set content based on point type
-        switch (type) {
-            case 'beach':
-                infoCard.innerHTML = `
-                    <h4>${title}</h4>
-                    <p>Beautiful sandy beach with crystal clear waters. Perfect for swimming and sunbathing.</p>
-                    <p><strong>Facilities:</strong> Restrooms, showers, beach chairs</p>
-                    <p><strong>Hours:</strong> Open 24/7</p>
-                    <a href="#" class="btn btn-sm btn-primary">More Details</a>
-                `;
-                break;
-            case 'dining':
-                infoCard.innerHTML = `
-                    <h4>${title}</h4>
-                    <p>Fresh seafood restaurant with ocean views. Local specialties and international cuisine.</p>
-                    <p><strong>Hours:</strong> 11:00 AM - 10:00 PM</p>
-                    <p><strong>Price Range:</strong> $$-$$$</p>
-                    <a href="#" class="btn btn-sm btn-primary">View Menu</a>
-                `;
-                break;
-            case 'activity':
-                infoCard.innerHTML = `
-                    <h4>${title}</h4>
-                    <p>Guided hiking tours of the dormant volcano with breathtaking views of the island.</p>
-                    <p><strong>Duration:</strong> 3-4 hours</p>
-                    <p><strong>Difficulty:</strong> Moderate</p>
-                    <a href="#" class="btn btn-sm btn-primary">Book Tour</a>
-                `;
-                break;
-            case 'shopping':
-                infoCard.innerHTML = `
-                    <h4>${title}</h4>
-                    <p>Traditional market with local crafts, fresh produce, and souvenirs.</p>
-                    <p><strong>Hours:</strong> 8:00 AM - 6:00 PM</p>
-                    <p><strong>Specialties:</strong> Handmade crafts, tropical fruits</p>
-                    <a href="#" class="btn btn-sm btn-primary">Shopping Guide</a>
-                `;
-                break;
-            case 'accommodation':
-                infoCard.innerHTML = `
-                    <h4>${title}</h4>
-                    <p>Luxury beachfront resort with spa, pools, and multiple restaurants.</p>
-                    <p><strong>Amenities:</strong> WiFi, A/C, room service</p>
-                    <p><strong>Price Range:</strong> $$$-$$$$</p>
-                    <a href="#" class="btn btn-sm btn-primary">Check Availability</a>
-                `;
-                break;
-            case 'attraction':
-                infoCard.innerHTML = `
-                    <h4>${title}</h4>
-                    <p>Learn about Taniti's rich cultural heritage through exhibits and performances.</p>
-                    <p><strong>Hours:</strong> 9:00 AM - 5:00 PM</p>
-                    <p><strong>Admission:</strong> $10 adults, $5 children</p>
-                    <a href="#" class="btn btn-sm btn-primary">Plan Visit</a>
-                `;
-                break;
-        }
-        
-        // Add close button
+
+        // Content is keyed by location type — add new types here as the site grows
+        const contentByType = {
+            beach: `
+                <h4>${title}</h4>
+                <p>Beautiful sandy beach with crystal-clear waters. Perfect for swimming and sunbathing.</p>
+                <p><strong>Facilities:</strong> Restrooms, showers, beach chairs</p>
+                <p><strong>Hours:</strong> Open 24/7</p>
+                <a href="#" class="btn btn-sm btn-primary">More Details</a>
+            `,
+            dining: `
+                <h4>${title}</h4>
+                <p>Fresh seafood restaurant with ocean views. Local specialties and international cuisine.</p>
+                <p><strong>Hours:</strong> 11:00 AM – 10:00 PM</p>
+                <p><strong>Price Range:</strong> $$–$$$</p>
+                <a href="#" class="btn btn-sm btn-primary">View Menu</a>
+            `,
+            activity: `
+                <h4>${title}</h4>
+                <p>Guided hiking tours of the dormant volcano with breathtaking views of the island.</p>
+                <p><strong>Duration:</strong> 3–4 hours</p>
+                <p><strong>Difficulty:</strong> Moderate</p>
+                <a href="#" class="btn btn-sm btn-primary">Book Tour</a>
+            `,
+            shopping: `
+                <h4>${title}</h4>
+                <p>Traditional market with local crafts, fresh produce, and souvenirs.</p>
+                <p><strong>Hours:</strong> 8:00 AM – 6:00 PM</p>
+                <p><strong>Specialties:</strong> Handmade crafts, tropical fruits</p>
+                <a href="#" class="btn btn-sm btn-primary">Shopping Guide</a>
+            `,
+            accommodation: `
+                <h4>${title}</h4>
+                <p>Luxury beachfront resort with spa, pools, and multiple restaurants.</p>
+                <p><strong>Amenities:</strong> WiFi, A/C, room service</p>
+                <p><strong>Price Range:</strong> $$$–$$$$</p>
+                <a href="#" class="btn btn-sm btn-primary">Check Availability</a>
+            `,
+            attraction: `
+                <h4>${title}</h4>
+                <p>Learn about Taniti's rich cultural heritage through exhibits and live performances.</p>
+                <p><strong>Hours:</strong> 9:00 AM – 5:00 PM</p>
+                <p><strong>Admission:</strong> $10 adults, $5 children</p>
+                <a href="#" class="btn btn-sm btn-primary">Plan Visit</a>
+            `,
+        };
+
+        infoCard.innerHTML = contentByType[type] || `<h4>${title}</h4><p>No details available.</p>`;
+
+        // Add a close button to dismiss the card
         const closeButton = document.createElement('button');
         closeButton.className = 'info-card-close';
         closeButton.innerHTML = '&times;';
         closeButton.setAttribute('aria-label', 'Close information');
         infoCard.appendChild(closeButton);
-        
-        // Remove any existing info cards
-        const existingCards = mapPlaceholder.querySelectorAll('.map-info-card');
-        existingCards.forEach(card => card.remove());
-        
-        // Add the new card
+
+        // Remove any previously open info card before showing the new one
+        mapPlaceholder.querySelectorAll('.map-info-card').forEach(card => card.remove());
         mapPlaceholder.appendChild(infoCard);
-        
-        // Position the card near the point but ensure it's visible
+
+        // Position the card next to the pin, flipping sides if it would overflow the map
         const pointRect = point.getBoundingClientRect();
-        const mapRect = mapPlaceholder.getBoundingClientRect();
-        
-        let top = pointRect.top - mapRect.top;
-        let left = pointRect.left - mapRect.left + 30; // Offset to the right of the point
-        
-        // Adjust if the card would go off the right edge
-        if (left + 300 > mapRect.width) { // Assuming card width is about 300px
-            left = pointRect.left - mapRect.left - 330; // Place to the left of the point
-        }
-        
-        // Adjust if the card would go off the bottom
-        if (top + 200 > mapRect.height) { // Assuming card height is about 200px
-            top = mapRect.height - 220;
-        }
-        
-        infoCard.style.top = `${top}px`;
+        const mapRect   = mapPlaceholder.getBoundingClientRect();
+
+        let top  = pointRect.top - mapRect.top;
+        let left = pointRect.left - mapRect.left + 30;
+
+        if (left + 300 > mapRect.width)  left = pointRect.left - mapRect.left - 330;
+        if (top  + 200 > mapRect.height) top  = mapRect.height - 220;
+
+        infoCard.style.top  = `${top}px`;
         infoCard.style.left = `${left}px`;
-        
-        // Add close functionality
-        closeButton.addEventListener('click', () => {
-            infoCard.remove();
-        });
-        
-        // Close when clicking outside
+
+        closeButton.addEventListener('click', () => infoCard.remove());
+
+        // Also dismiss the card when clicking anywhere else on the page
         document.addEventListener('click', function closeCard(e) {
             if (!infoCard.contains(e.target) && e.target !== point) {
                 infoCard.remove();
                 document.removeEventListener('click', closeCard);
             }
         });
-        
-        // Focus the close button for accessibility
-        setTimeout(() => {
-            closeButton.focus();
-        }, 100);
+
+        setTimeout(() => closeButton.focus(), 100);
     }
-    
-    // Add filter functionality if legend exists
+
+    // Legend filter — clicking a category toggles its pins on and off
     if (mapLegend) {
         const legendItems = mapLegend.querySelectorAll('.legend-item');
-        
+
         legendItems.forEach(item => {
             item.addEventListener('click', () => {
                 const type = item.dataset.type;
-                
-                // Toggle active state
                 item.classList.toggle('active');
-                
-                // Show/hide corresponding map points
+
                 mapPoints.forEach(point => {
-                    if (type === 'all' || point.dataset.type === type) {
-                        if (type === 'all') {
-                            // If "All" is clicked, show/hide all points based on its state
-                            point.style.display = item.classList.contains('active') ? 'block' : 'none';
-                            
-                            // Update other legend items to match
-                            legendItems.forEach(li => {
-                                if (li !== item) {
-                                    if (item.classList.contains('active')) {
-                                        li.classList.add('active');
-                                    } else {
-                                        li.classList.remove('active');
-                                    }
-                                }
-                            });
-                        } else {
-                            // For specific categories
-                            point.style.display = item.classList.contains('active') ? 'block' : 'none';
-                            
-                            // Update "All" based on other categories
-                            const allLegendItem = mapLegend.querySelector('[data-type="all"]');
-                            const activeCategories = mapLegend.querySelectorAll('.legend-item.active:not([data-type="all"])');
-                            
-                            if (activeCategories.length === legendItems.length - 1) {
-                                // All categories are active
-                                allLegendItem.classList.add('active');
-                            } else {
-                                // Not all categories are active
-                                allLegendItem.classList.remove('active');
-                            }
-                        }
+                    if (type === 'all') {
+                        // The "All" toggle syncs all other legend items to match its state
+                        point.style.display = item.classList.contains('active') ? 'block' : 'none';
+                        legendItems.forEach(li => {
+                            if (li !== item) li.classList.toggle('active', item.classList.contains('active'));
+                        });
+                    } else if (point.dataset.type === type) {
+                        point.style.display = item.classList.contains('active') ? 'block' : 'none';
+
+                        // Sync the "All" indicator — mark it active only if every category is on
+                        const allItem         = mapLegend.querySelector('[data-type="all"]');
+                        const activeCount     = mapLegend.querySelectorAll('.legend-item.active:not([data-type="all"])').length;
+                        const totalCategories = legendItems.length - 1; // Excludes the "All" item itself
+                        if (allItem) allItem.classList.toggle('active', activeCount === totalCategories);
                     }
                 });
             });
@@ -1225,53 +1130,65 @@ function initMapInteraction() {
     }
 }
 
-/**
- * Animations on Scroll
- */
+
+// =============================================================================
+// SCROLL ANIMATIONS
+// Uses the IntersectionObserver API to trigger CSS animations when elements
+// scroll into view. Add the class "fade-in-element" or "slide-in-element"
+// to any HTML element to opt it in. The animation fires once and won't
+// repeat if the user scrolls back up.
+//
+// Gracefully skips browsers that don't support IntersectionObserver
+// (mainly very old IE) without breaking anything else.
+// =============================================================================
 function initAnimations() {
-    // Only run on browsers that support IntersectionObserver
     if (!('IntersectionObserver' in window)) return;
-    
+
     const animatedElements = document.querySelectorAll('.fade-in-element, .slide-in-element');
-    
+
     if (!animatedElements.length) return;
-    
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('animated');
-                // Stop observing after animation is triggered
-                observer.unobserve(entry.target);
+                observer.unobserve(entry.target); // Stop watching once the animation has played
             }
         });
     }, {
-        threshold: 0.1, // Trigger when 10% of the element is visible
-        rootMargin: '0px 0px -50px 0px' // Adjust the trigger point (negative value means trigger before fully in view)
+        threshold: 0.1,                // Fire when at least 10% of the element is visible
+        rootMargin: '0px 0px -50px 0px' // Trigger slightly before the element fully enters the viewport
     });
-    
-    animatedElements.forEach(element => {
-        observer.observe(element);
-    });
+
+    animatedElements.forEach(el => observer.observe(el));
 }
 
-/**
- * Currency Converter
- */
+
+// =============================================================================
+// CURRENCY CONVERTER
+// Lets visitors convert between common currencies and the fictional
+// Taniti Dollar (TND) to help them budget for their trip.
+//
+// ⚠️  TODO: Exchange rates are hardcoded here for demonstration.
+// Replace with a live rates API for production accuracy.
+// Recommended free option: ExchangeRate-API (https://exchangerate-api.com)
+// Free tier gives 1,500 requests/month — more than enough for a tourism site.
+// =============================================================================
 function initCurrencyConverter() {
     const converter = document.querySelector('.currency-converter');
-    
+
     if (!converter) return;
-    
-    const fromInput = converter.querySelector('#from-amount');
-    const toInput = converter.querySelector('#to-amount');
+
+    const fromInput    = converter.querySelector('#from-amount');
+    const toInput      = converter.querySelector('#to-amount');
     const fromCurrency = converter.querySelector('#from-currency');
-    const toCurrency = converter.querySelector('#to-currency');
-    const swapBtn = converter.querySelector('.swap-btn');
-    const convertBtn = converter.querySelector('.convert-btn');
-    const resultDiv = converter.querySelector('.conversion-result');
-    
-    // Exchange rates (fixed for demo purposes)
-    // In a real application, these would be fetched from an API
+    const toCurrency   = converter.querySelector('#to-currency');
+    const swapBtn      = converter.querySelector('.swap-btn');
+    const convertBtn   = converter.querySelector('.convert-btn');
+    const resultDiv    = converter.querySelector('.conversion-result');
+
+    // Static exchange rates relative to USD.
+    // TND (Taniti Dollar) is fictional — feel free to set whatever rate makes sense.
     const exchangeRates = {
         USD: 1,
         EUR: 0.85,
@@ -1279,104 +1196,88 @@ function initCurrencyConverter() {
         JPY: 110.14,
         AUD: 1.35,
         CAD: 1.25,
-        TND: 2.5 // Taniti Dollar (fictional)
+        TND: 2.5,
     };
-    
-    // Convert currency
+
+    // All conversions go through USD as the common base to keep the math simple
     function convertCurrency() {
         const fromValue = parseFloat(fromInput.value);
+
         if (isNaN(fromValue)) {
             resultDiv.textContent = 'Please enter a valid amount';
             resultDiv.classList.add('error');
             return;
         }
-        
-        const fromRate = exchangeRates[fromCurrency.value];
-        const toRate = exchangeRates[toCurrency.value];
-        
-        // Convert to USD first, then to target currency
-        const inUSD = fromValue / fromRate;
-        const converted = inUSD * toRate;
-        
-        // Display result with 2 decimal places
-        toInput.value = converted.toFixed(2);
-        
-        // Show result message
+
+        const inUSD     = fromValue / exchangeRates[fromCurrency.value];
+        const converted = inUSD * exchangeRates[toCurrency.value];
+
+        toInput.value         = converted.toFixed(2);
         resultDiv.textContent = `${fromValue} ${fromCurrency.value} = ${converted.toFixed(2)} ${toCurrency.value}`;
         resultDiv.classList.remove('error');
     }
-    
-    // Swap currencies
+
+    // Swaps both the selected currencies and their current values
     function swapCurrencies() {
-        const tempCurrency = fromCurrency.value;
-        fromCurrency.value = toCurrency.value;
-        toCurrency.value = tempCurrency;
-        
-        const tempValue = fromInput.value;
-        fromInput.value = toInput.value;
-        toInput.value = tempValue;
-        
-        // Update result if values exist
-        if (fromInput.value) {
-            convertCurrency();
-        }
+        [fromCurrency.value, toCurrency.value] = [toCurrency.value, fromCurrency.value];
+        [fromInput.value,    toInput.value]    = [toInput.value,    fromInput.value];
+        if (fromInput.value) convertCurrency();
     }
-    
-    // Event listeners
-    if (convertBtn) {
-        convertBtn.addEventListener('click', convertCurrency);
-    }
-    
-    if (swapBtn) {
-        swapBtn.addEventListener('click', swapCurrencies);
-    }
-    
-    // Auto-convert when inputs change
-    [fromInput, fromCurrency, toCurrency].forEach(element => {
-        element.addEventListener('change', convertCurrency);
-    });
-    
-    // Initialize with default values
-    fromInput.value = '1';
+
+    if (convertBtn) convertBtn.addEventListener('click', convertCurrency);
+    if (swapBtn)    swapBtn.addEventListener('click', swapCurrencies);
+
+    // Recalculate automatically whenever the user changes a value or currency
+    [fromInput, fromCurrency, toCurrency].forEach(el => el.addEventListener('change', convertCurrency));
+
+    // Start with a sensible default so users see an example conversion on load
+    fromInput.value    = '1';
     fromCurrency.value = 'USD';
-    toCurrency.value = 'TND';
+    toCurrency.value   = 'TND';
     convertCurrency();
 }
 
-/**
- * Language Switcher (Demo)
- */
+
+// =============================================================================
+// LANGUAGE SWITCHER (UI Demo)
+// Updates the displayed language name in the selector dropdown.
+//
+// ⚠️  TODO: This is a UI-only demo — no translation logic is wired up yet.
+// For real i18n, consider i18next (https://www.i18next.com) or a simple
+// JSON-based approach where each language has its own translations file.
+// =============================================================================
 function initLanguageSwitcher() {
     const languageSelector = document.querySelector('.language-selector');
-    
+
     if (!languageSelector) return;
-    
+
     const languageOptions = languageSelector.querySelectorAll('.language-option');
     const currentLanguage = languageSelector.querySelector('.current-language');
-    
+
     languageOptions.forEach(option => {
         option.addEventListener('click', () => {
-            const language = option.dataset.lang;
-            const languageName = option.textContent;
-            
-            // Update current language display
-            currentLanguage.textContent = languageName;
-            
-            // In a real application, this would load translated content
-            // For demo purposes, just show a notification
-            showNotification(`Language changed to ${languageName}. In a real application, the page content would be translated.`);
-            
-            // Close dropdown (if implemented as a clickable dropdown rather than hover)
+            currentLanguage.textContent = option.textContent;
+
+            // Inform the user that translation is not yet implemented
+            showNotification(`Language changed to ${option.textContent}. Full translation support is coming soon!`);
+
             languageSelector.classList.remove('open');
         });
     });
 }
 
-/**
- * Show a temporary notification
- */
+
+// =============================================================================
+// NOTIFICATION TOAST
+// Displays a temporary pop-up message to give users non-blocking feedback
+// (e.g. "Language changed", "Itinerary saved"). The toast auto-dismisses
+// after the specified duration and includes a manual close button.
+//
+// Usage: showNotification('Your message here', 'info', 3000)
+//   - type can be 'info', 'success', or 'error' (maps to CSS classes)
+//   - duration is in milliseconds; pass 0 to keep it open until manually closed
+// =============================================================================
 function showNotification(message, type = 'info', duration = 3000) {
-    // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.innerHTML = `
@@ -1385,74 +1286,64 @@ function showNotification(message, type = 'info', duration = 3000) {
             <button class="notification-close" aria-label="Close notification">&times;</button>
         </div>
     `;
-    
-    // Add to page
+
     document.body.appendChild(notification);
-    
-    // Show with animation
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 10);
-    
-    // Set up close button
+
+    // Trigger the entrance animation on the next frame
+    setTimeout(() => notification.classList.add('show'), 10);
+
     const closeBtn = notification.querySelector('.notification-close');
-    closeBtn.addEventListener('click', () => {
+    const dismiss  = () => {
         notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 300); // Wait for the fade-out transition
+    };
+
+    closeBtn.addEventListener('click', dismiss);
+
+    // Auto-dismiss after the specified duration (unless duration is 0)
+    if (duration > 0) {
         setTimeout(() => {
-            notification.remove();
-        }, 300);
-    });
-    
-    // Auto-remove after duration
-    if (duration) {
-        setTimeout(() => {
-            if (document.body.contains(notification)) {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }
+            if (document.body.contains(notification)) dismiss();
         }, duration);
     }
 }
 
-/**
- * Countdown Timer for Special Events
- */
+
+// =============================================================================
+// COUNTDOWN TIMER
+// Displays a live days/hours/minutes/seconds countdown to the next event.
+//
+// ⚠️  TODO: The target date is currently set to 30 days from page load,
+// which is useful for testing but not meaningful to real visitors.
+// Update targetDate to a real upcoming event date, or fetch event dates
+// from a CMS/API so the countdown stays accurate without code changes.
+// =============================================================================
 function initCountdownTimer() {
     const countdownContainer = document.querySelector('.countdown-timer');
-    
+
     if (!countdownContainer) return;
-    
-    // Set the target date (for demo purposes, 30 days from now)
-    const now = new Date();
+
+    // Placeholder: 30 days from now — replace with a real event date
     const targetDate = new Date();
-    targetDate.setDate(now.getDate() + 30);
-    
-    // Update the countdown every second
+    targetDate.setDate(targetDate.getDate() + 30);
+
     const countdownInterval = setInterval(updateCountdown, 1000);
-    
-    // Initial update
-    updateCountdown();
-    
+    updateCountdown(); // Run immediately so there's no 1-second blank on load
+
     function updateCountdown() {
-        const now = new Date();
-        const timeLeft = targetDate - now;
-        
-        // If countdown is finished
+        const timeLeft = targetDate - new Date();
+
         if (timeLeft <= 0) {
             clearInterval(countdownInterval);
             countdownContainer.innerHTML = '<p class="countdown-finished">The event has started!</p>';
             return;
         }
-        
-        // Calculate time units
-        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+        const days    = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours   = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-        
-        // Update the HTML
+
         countdownContainer.innerHTML = `
             <div class="countdown-item">
                 <span class="countdown-value">${days}</span>
@@ -1474,29 +1365,40 @@ function initCountdownTimer() {
     }
 }
 
-/**
- * Initialize all components
- */
-document.addEventListener('DOMContentLoaded', function() {
-    // Core functionality
+
+// =============================================================================
+// INITIALIZATION
+// Wires up every feature above once the DOM is fully loaded.
+// All functions check for their required elements internally, so it's safe
+// to call them all here — they'll simply skip pages where they don't apply.
+//
+// To add a new feature: define its init function above, then call it here.
+// =============================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Core navigation and UI
     initMobileMenu();
+    initSmoothScrolling();
+    initNotificationBanner();
+    initAnimations();
+
+    // FAQ page features
     initFaqAccordion();
     initTabSwitching();
-    initNotificationBanner();
     initSearchFunctionality();
+
+    // Forms
     initFormValidation();
+
+    // Interactive widgets
     initGalleryLightbox();
-    initSmoothScrolling();
-    
-    // Additional features
     initWeatherWidget();
     initItineraryBuilder();
     initMapInteraction();
-    initAnimations();
     initCurrencyConverter();
     initLanguageSwitcher();
     initCountdownTimer();
-    
-    // Add "loaded" class to body for CSS transitions
+
+    // Signal to CSS that JS has loaded — enables transition animations
+    // that would otherwise fire on page load before elements are in position
     document.body.classList.add('loaded');
 });
