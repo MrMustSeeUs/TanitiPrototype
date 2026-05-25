@@ -968,7 +968,7 @@ function initMapInteraction() {
     // Pin positions (top/left %) are relative to the map image dimensions.
     mapPlaceholder.innerHTML = `
         <div class="map-demo">
-            <img src="Assets/interactivemap.png" alt="Map of Taniti Island" class="map-image">
+            <img src="Assets/interactivemap.png" alt="Interactive map of Taniti Island..." class="map-image">
             <div class="map-overlay">
                 <div class="map-point" style="top: 30%; left: 40%;" data-type="beach"         title="Taniti Beach"></div>
                 <div class="map-point" style="top: 45%; left: 60%;" data-type="dining"        title="Seafood Restaurant"></div>
