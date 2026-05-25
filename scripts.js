@@ -1401,4 +1401,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Signal to CSS that JS has loaded — enables transition animations
     // that would otherwise fire on page load before elements are in position
     document.body.classList.add('loaded');
+
+        // Automatically keep the copyright year current — no manual updates needed
+    const yearEl = document.getElementById('copyright-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
 });
