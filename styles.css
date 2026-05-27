@@ -808,19 +808,38 @@ section {
     margin-top: 3rem;
 }
 
+/* =============================================================================
+   TRANSPORTATION GRID
+   5 cards displayed as a 4-column top row + 1 centered card on the second row.
+   All card images are forced to the same height so nothing looks mismatched.
+   Cards use flexbox internally so the content fills evenly regardless of length.
+   ============================================================================= */
+
 .transport-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
+    /* 4 equal columns on desktop — collapses gracefully on smaller screens */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+/* The 5th card (Walking) sits alone — center it spanning all 4 columns
+   then limit its own width so it doesn't stretch to full page width */
+.transport-card:last-child {
+    grid-column: 1 / -1;           /* Span all columns */
+    max-width: 280px;              /* Don't let it go full width */
+    margin: 0 auto;                /* Center it in the row */
 }
 
 .transport-card {
     background: #fff;
-    padding: 1.8rem;
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow);
     border-top: 4px solid var(--secondary-color);
     transition: var(--transition);
+    /* Flexbox column so card body fills height evenly */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;             /* Keeps image corners clipped to border-radius */
 }
 
 .transport-card:hover {
@@ -828,14 +847,66 @@ section {
     box-shadow: var(--shadow-md);
 }
 
+/* Fixed image height — all cards show the same image area regardless
+   of the original photo's aspect ratio */
+.transport-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 0;             /* Image clips to card edges, not its own radius */
+    flex-shrink: 0;               /* Never let the image compress */
+    transition: transform 0.4s ease;
+}
+
+.transport-card:hover img {
+    transform: scale(1.04);
+}
+
+/* Padding wrapper for the text content below the image */
+.transport-card-body {
+    padding: 1.2rem 1.4rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;                      /* Stretch to fill remaining card height */
+}
+
 .transport-card h3 {
     color: var(--primary-color);
-    margin-bottom: 0.75rem;
+    font-size: 1.05rem;
+    margin-bottom: 0.6rem;
+    font-family: var(--font-display);
+}
+
+.transport-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0;
 }
 
 .transport-map {
     margin-top: 3rem;
     text-align: center;
+}
+
+/* Responsive — collapse to 2 columns on tablet, 1 on mobile */
+@media (max-width: 900px) {
+    .transport-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* On 2-col layout, let the 5th card fill one column normally */
+    .transport-card:last-child {
+        grid-column: auto;
+        max-width: 100%;
+        margin: 0;
+    }
+}
+
+@media (max-width: 500px) {
+    .transport-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .tips-content {
