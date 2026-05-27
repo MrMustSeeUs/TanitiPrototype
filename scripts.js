@@ -14,7 +14,6 @@
  * Last updated: 2026
  */
 
-
 // =============================================================================
 // MOBILE MENU
 // Handles the hamburger menu toggle for small screens.
@@ -1700,6 +1699,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('loaded');
 
     // Automatically keep the copyright year current — no manual updates needed
-    const yearEl = document.getElementById('copyright-year');
-    if (yearEl) yearEl.textContent = new Date().getFullYear();
+    // Uses querySelectorAll since the footer may have one or two year spans per page
+    document.querySelectorAll('.copyright-year').forEach(el => {
+        el.textContent = new Date().getFullYear();
+    });
 });
