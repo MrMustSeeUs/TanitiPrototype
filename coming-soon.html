@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon — Taniti Island</title>
+    <meta name="description" content="This page is currently under construction. Taniti Island is a fictional destination created as a web development portfolio project.">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* -----------------------------------------------------------------------
+           Coming Soon page — inline styles kept here since this is a standalone
+           page not part of the main design system. If this page graduates to a
+           full page, move these into styles.css under a .coming-soon-page block.
+        ----------------------------------------------------------------------- */
+
+        .coming-soon-hero {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+                135deg,
+                rgba(13, 126, 131, 0.92),
+                rgba(16, 165, 171, 0.88)
+            ),
+            url('Assets/beaches.jpg') center / cover no-repeat;
+            text-align: center;
+            padding: 4rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle animated wave decoration at the bottom of the hero */
+        .coming-soon-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: var(--light-color);
+            clip-path: ellipse(55% 100% at 50% 100%);
+        }
+
+        .coming-soon-content {
+            max-width: 680px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .coming-soon-emoji {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 1rem;
+            animation: gentle-bob 3s ease-in-out infinite;
+        }
+
+        @keyframes gentle-bob {
+            0%, 100% { transform: translateY(0);    }
+            50%       { transform: translateY(-8px); }
+        }
+
+        .coming-soon-content h2 {
+            color: var(--light-text);
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Override the default h2 underline for this page */
+        .coming-soon-content h2::after {
+            background: var(--secondary-color);
+        }
+
+        .coming-soon-content .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+        }
+
+        /* The page name pill — shows which section the user was trying to reach */
+        .page-name-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: var(--light-text);
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            letter-spacing: 0.03em;
+        }
+
+        /* Beta disclaimer card */
+        .beta-notice {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--border-radius);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2.5rem;
+            text-align: left;
+        }
+
+        .beta-notice h3 {
+            color: var(--secondary-color);
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .beta-notice p {
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .beta-notice p:last-child {
+            margin-bottom: 0;
+        }
+
+        .beta-notice a {
+            color: var(--secondary-color);
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        .beta-notice a:hover {
+            color: #fff;
+        }
+
+        /* Action button row */
+        .coming-soon-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Info cards section below the hero */
+        .coming-soon-info {
+            padding: 4rem 0;
+            background-color: var(--light-color);
+        }
+
+        .info-cols {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .info-col {
+            background: #fff;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .info-col .col-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .info-col h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+        }
+
+        .info-col p {
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        @media (max-width: 480px) {
+            .coming-soon-content h2 {
+                font-size: 1.7rem;
+            }
+
+            .coming-soon-emoji {
+                font-size: 3rem;
+            }
+
+            .beta-notice {
+                padding: 1.2rem 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Site Header — identical to all other pages -->
+    <header class="site-header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <h1>TANITI ISLAND</h1>
+                </a>
+            </div>
+            <nav class="main-nav">
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <span class="menu-icon"></span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="plan.html">Plan</a></li>
+                    <li><a href="explore.html">Explore</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- Hero Section -->
+        <section class="coming-soon-hero">
+            <div class="coming-soon-content">
+
+                <span class="coming-soon-emoji" aria-hidden="true">🌺</span>
+
+                <!-- Page name badge — filled dynamically by JS below -->
+                <div class="page-name-badge" id="page-name-badge">This Page</div>
+
+                <h2>We're Still Building This Corner of the Island</h2>
+                <p class="subtitle" id="coming-soon-subtitle">
+                    This section is under construction and will be ready soon.
+                </p>
+
+                <!-- Beta + fictional island notice -->
+                <div class="beta-notice" role="note" aria-label="Project information">
+                    <h3>🏝️ About This Site</h3>
+                    <p>
+                        <strong>Taniti Island doesn't exist</strong> — and that's entirely intentional!
+                        This is a portfolio project built to demonstrate modern web development,
+                        cloud deployment, and DevOps engineering skills.
+                    </p>
+                    <p>
+                        This site is currently in <strong>beta</strong>. Some pages and features
+                        are still being crafted. Think of it like the island itself — always
+                        growing, always improving. Check back soon for updates, or explore
+                        what's already here using the navigation above.
+                    </p>
+                    <p>
+                        Curious about the tech behind this? View the source on
+                        <a href="https://github.com/MrMustSeeUs/TanitiPrototype" target="_blank" rel="noopener noreferrer">GitHub</a>.
+                    </p>
+                </div>
+
+                <!-- Navigation buttons -->
+                <div class="coming-soon-actions">
+                    <a href="index.html" class="btn btn-primary">🏠 Back to Home</a>
+                    <a href="explore.html" class="btn btn-secondary">🗺️ Explore the Island</a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- What's Already Available Section -->
+        <section class="coming-soon-info">
+            <div class="container">
+                <h2>Explore What's Ready</h2>
+                <div class="info-cols">
+                    <div class="info-col">
+                        <span class="col-icon" aria-hidden="true">🏖️</span>
+                        <h3>Explore Taniti</h3>
+                        <p>Discover beaches, dining, activities, shopping, and more across the island's vibrant regions.</p>
+                        <a href="explore.html" class="btn btn-secondary mt-2">Explore Now</a>
+                    </div>
+                    <div class="info-col">
+                        <span class="col-icon" aria-hidden="true">📅</span>
+                        <h3>Plan Your Visit</h3>
+                        <p>Use our interactive trip planner to build a personalised day-by-day itinerary for your stay.</p>
+                        <a href="plan.html" class="btn btn-secondary mt-2">Start Planning</a>
+                    </div>
+                    <div class="info-col">
+                        <span class="col-icon" aria-hidden="true">❓</span>
+                        <h3>FAQ</h3>
+                        <p>Find answers to common questions about getting to Taniti, staying safe, currency, and more.</p>
+                        <a href="faq.html" class="btn btn-secondary mt-2">View FAQ</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Site Footer — identical to all other pages -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-links">
+                <ul>
+                    <li><a href="coming-soon.html?page=contact">Contact</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="coming-soon.html?page=terms">Terms</a></li>
+                    <li><a href="coming-soon.html?page=privacy">Privacy</a></li>
+                </ul>
+            </div>
+            <div class="social-media">
+                <a href="#" aria-label="Facebook"><span class="social-icon facebook"></span></a>
+                <a href="#" aria-label="Instagram"><span class="social-icon instagram"></span></a>
+                <a href="#" aria-label="Twitter"><span class="social-icon twitter"></span></a>
+            </div>
+            <p class="copyright">© <span id="copyright-year"></span> Taniti Island Tourism Board. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+    <script>
+        /*
+         * coming-soon.html — page context script
+         *
+         * Reads the ?page= query parameter from the URL to determine which
+         * missing page the visitor was trying to reach, then personalises
+         * the heading and subtitle to match.
+         *
+         * Example URL: coming-soon.html?page=contact
+         * Result:      badge shows "Contact", subtitle reflects that section.
+         */
+        (function() {
+            // Human-readable labels and subtitles for each known missing page
+            const pageContext = {
+                'contact':          { label: 'Contact Us',           subtitle: 'Our contact page is on its way — including a form, phone number, and map to our visitor centre.' },
+                'events':           { label: 'Events',               subtitle: 'Our events calendar is being built. Soon you\'ll find festivals, cultural nights, and seasonal activities here.' },
+                'accommodations':   { label: 'Accommodations',       subtitle: 'A full guide to resorts, hotels, B&Bs, and hostels is coming — detailed listings with photos and booking links.' },
+                'booking':          { label: 'Book Now',             subtitle: 'Our booking system is in development. For now, use the Plan page to build your itinerary.' },
+                'dining':           { label: 'Dining',               subtitle: 'A dedicated dining guide with menus, locations, and hours is on its way. Find current dining info on the Explore page.' },
+                'merriton-landing': { label: 'Merriton Landing',     subtitle: 'A dedicated guide to Merriton Landing — Taniti\'s largest city — is coming soon with maps, history, and highlights.' },
+                'terms':            { label: 'Terms of Service',     subtitle: 'Our terms of service page is being prepared. This is a portfolio project — no real transactions take place here.' },
+                'privacy':          { label: 'Privacy Policy',       subtitle: 'Our privacy policy is being drafted. This site does not collect personal data — it\'s a portfolio demo project.' },
+            };
+
+            // Parse the ?page= value from the current URL
+            const params  = new URLSearchParams(window.location.search);
+            const pageKey = params.get('page') || '';
+            const context = pageContext[pageKey];
+
+            if (context) {
+                const badge    = document.getElementById('page-name-badge');
+                const subtitle = document.getElementById('coming-soon-subtitle');
+                if (badge)    badge.textContent    = context.label;
+                if (subtitle) subtitle.textContent = context.subtitle;
+            }
+        })();
+    </script>
+
+</body>
+</html>
