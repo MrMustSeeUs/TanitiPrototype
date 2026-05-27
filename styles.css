@@ -419,20 +419,37 @@ section {
    Images get a subtle scale on hover. "Read more" gets an arrow nudge.
    ============================================================================= */
 
+/* =============================================================================
+   FEATURE GRID & CARDS
+   Used on index.html (6 cards) and about.html (3 cards).
+   Cards are equal height in every row — image fixed, body fills remaining space,
+   read-more link is always pinned to the bottom.
+   ============================================================================= */
+
 .feature-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    /* 3 equal columns on desktop — collapses gracefully below */
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     margin-top: 2rem;
 }
 
+/* 6-card grid (index.html) — all 6 fill 2 rows of 3 perfectly */
+.feature-grid.grid-6 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
 .feature-card {
-    background-color: #fff;
+    background: #fff;
     border-radius: var(--border-radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow);
     transition: var(--transition);
     border-top: 4px solid var(--primary-color);
+    border-left: 1px solid rgba(13, 126, 131, 0.12);
+    border-right: 1px solid rgba(13, 126, 131, 0.12);
+    border-bottom: 1px solid rgba(13, 126, 131, 0.12);
+    /* Flex column so card body fills height — keeps all cards in a row equal */
     display: flex;
     flex-direction: column;
 }
@@ -442,11 +459,13 @@ section {
     box-shadow: var(--shadow-hover);
 }
 
+/* Fixed image height — all cards show the same image area */
 .feature-card img {
     width: 100%;
-    height: 210px;
+    height: 200px;
     object-fit: cover;
-    border-radius: 0;         /* Image fills to edges of card */
+    border-radius: 0;
+    flex-shrink: 0;
     transition: transform 0.4s ease;
 }
 
@@ -454,25 +473,69 @@ section {
     transform: scale(1.04);
 }
 
+/* Text wrapper — fills remaining card height so read-more is always at bottom */
+.feature-card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.1rem 1.2rem 1.2rem;
+}
+
 .feature-card h3 {
-    padding: 1.1rem 1.2rem 0.4rem;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--primary-color);
+    margin-bottom: 0.5rem;
 }
 
 .feature-card p {
-    padding: 0 1.2rem;
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
+    font-size: 0.93rem;
     color: var(--text-muted);
-    flex: 1;
+    line-height: 1.6;
+    margin-bottom: 0;
+    flex: 1; /* Pushes read-more link to the bottom */
 }
 
 .read-more {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    padding: 0.6rem 1.2rem 1.2rem;
+    margin-top: 1rem;
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 0.88rem;
+    letter-spacing: 0.02em;
+    transition: var(--transition);
+    text-decoration: none;
+    align-self: flex-start; /* Don't stretch full width */
+}
+
+.read-more::after {
+    content: '→';
+    transition: transform 0.2s ease;
+}
+
+.read-more:hover {
+    color: var(--secondary-color);
+}
+
+.read-more:hover::after {
+    transform: translateX(4px);
+}
+
+/* Responsive — collapse feature grid */
+@media (max-width: 900px) {
+    .feature-grid,
+    .feature-grid.grid-6 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 560px) {
+    .feature-grid,
+    .feature-grid.grid-6 {
+        grid-template-columns: 1fr;
+    }
+}
     color: var(--primary-color);
     font-weight: 700;
     font-size: 0.9rem;
@@ -2910,4 +2973,428 @@ h6 {
         flex-direction: column;
         align-items: flex-start;
     }
+}
+
+/* =============================================================================
+   ACCESSIBILITY & PERFORMANCE — COMPREHENSIVE PASS
+   Skip links, focus rings, reduced motion, contrast fixes, and responsive
+   patches for every layout that was missing mobile coverage.
+   ============================================================================= */
+
+/* --- Skip to Content Link ---
+   Visually hidden until focused via keyboard Tab — then slides into view.
+   Allows keyboard and screen reader users to bypass the nav on every page. */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 1rem;
+    background: var(--secondary-color);
+    color: var(--dark-color);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    font-weight: 700;
+    font-size: 0.95rem;
+    z-index: 9999;
+    transition: top 0.2s ease;
+    text-decoration: none;
+    box-shadow: var(--shadow-md);
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: 3px solid var(--dark-color);
+    outline-offset: 2px;
+}
+
+/* --- Global Focus Ring ---
+   High-visibility focus indicator for all interactive elements.
+   Replaces browser default which is often invisible on colored backgrounds. */
+:focus-visible {
+    outline: 3px solid var(--secondary-color);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Remove outline on mouse click (only show for keyboard navigation) */
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Extra prominent focus on nav links since they're on a colored background */
+.nav-links a:focus-visible {
+    outline: 3px solid var(--light-text);
+    outline-offset: 3px;
+    background: rgba(255,255,255,0.2);
+}
+
+/* Ensure form inputs always show a visible focus state */
+.form-group input:focus-visible,
+.form-group select:focus-visible,
+.search-input-group input:focus-visible {
+    outline: 3px solid var(--secondary-color);
+    outline-offset: 0;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(13,126,131,0.15);
+}
+
+/* --- Reduced Motion ---
+   Respects the user's OS preference for reduced motion.
+   Removes animations and transitions for users with vestibular disorders. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .coming-soon-emoji {
+        animation: none !important;
+    }
+
+    .wave-animation {
+        animation: none !important;
+    }
+}
+
+/* --- Improved Text Muted Contrast ---
+   Bumped from #64748b (4.6:1) to #4a5568 (7.0:1) — passes WCAG AA + AAA */
+:root {
+    --text-muted: #4a5568;
+}
+
+/* --- Card border-left accent for extra contrast on white backgrounds ---
+   Thin left border on cards helps delineate card boundaries on white sections
+   where the shadow alone may not be visible for low-vision users. */
+.feature-card,
+.info-card,
+.accommodation-card,
+.dining-category,
+.shopping-category {
+    border-left: 1px solid rgba(13, 126, 131, 0.12);
+    border-right: 1px solid rgba(13, 126, 131, 0.12);
+    border-bottom: 1px solid rgba(13, 126, 131, 0.12);
+}
+
+.transport-card,
+.activity-card,
+.faq-item {
+    border-left: 1px solid rgba(0, 0, 0, 0.06);
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Planner tool and results containers — clear boundary on light bg */
+.planner-tool,
+.itinerary-builder,
+.currency-converter,
+.weather-widget {
+    border: 1px solid rgba(13, 126, 131, 0.12);
+}
+
+/* Events and weather boxes on homepage */
+.events-box,
+.weather-box {
+    border-left: 1px solid rgba(13, 126, 131, 0.1);
+    border-right: 1px solid rgba(13, 126, 131, 0.1);
+    border-bottom: 1px solid rgba(13, 126, 131, 0.1);
+}
+
+/* Feature items in dining section */
+.feature-item {
+    border: 1px solid rgba(13, 126, 131, 0.12);
+    border-top: 4px solid var(--primary-color);
+    border-radius: var(--border-radius-lg);
+    padding: 1.8rem;
+    background: #fff;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.feature-item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+}
+
+.feature-item h4 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+/* Shopping note — subtle callout box */
+.shopping-note {
+    background: rgba(13,126,131,0.05);
+    border: 1px solid rgba(13,126,131,0.2);
+    border-left: 4px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    padding: 1.2rem 1.5rem;
+    margin-top: 2rem;
+}
+
+.shopping-note p {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 0.95rem;
+}
+
+/* Coming soon card in activities */
+.coming-soon {
+    background: #fff;
+    border: 1px solid rgba(249,168,38,0.3);
+    border-top: 4px solid var(--secondary-color);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    margin-top: 2rem;
+}
+
+.coming-soon h3 {
+    color: var(--secondary-dark);
+    margin-bottom: 1.2rem;
+}
+
+/* =============================================================================
+   RESPONSIVE — MISSING BREAKPOINTS
+   All grids that were breaking on tablet/mobile but had no media query override.
+   ============================================================================= */
+
+/* Large tablet — 1024px */
+@media (max-width: 1024px) {
+    /* Hero headings scale down gracefully */
+    .hero h2       { font-size: 2.8rem; }
+    .page-hero h2  { font-size: 2.2rem; }
+
+    /* Dining grid drops to 2 cols on medium screens */
+    .dining-grid,
+    .shopping-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Activity grid — 3 columns on large tablet */
+    .activity-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Tablet — 768px */
+@media (max-width: 768px) {
+    /* Map section stacks — map on top, controls below */
+    .map-container {
+        grid-template-columns: 1fr;
+    }
+
+    .island-map {
+        height: 280px;
+    }
+
+    /* Dining and shopping drop to 1 col on mobile */
+    .dining-grid,
+    .shopping-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Activity grid — 2 cols on tablet */
+    .activity-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Dining features (microbrewery + pubs) — stack vertically */
+    .dining-features {
+        grid-template-columns: 1fr;
+    }
+
+    /* Spotlight content — stack on tablet */
+    .spotlight-content {
+        grid-template-columns: 1fr;
+    }
+
+    /* Soon content (coming soon card) — stack */
+    .soon-content {
+        grid-template-columns: 1fr;
+    }
+
+    /* About page two-column layouts — all stack */
+    .overview-content,
+    .culture-content,
+    .city-content,
+    .merriton-content {
+        grid-template-columns: 1fr;
+    }
+
+    /* Currency converter — stack on mobile */
+    .converter-form {
+        grid-template-columns: 1fr;
+    }
+
+    /* Countdown timer — smaller values on mobile */
+    .countdown-value {
+        font-size: 1.5rem;
+    }
+
+    /* Itinerary actions — stack buttons */
+    .itinerary-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .itinerary-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Day selector — horizontal scroll on mobile */
+    .day-selector {
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .day-selector::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* Mobile — 480px */
+@media (max-width: 480px) {
+    html { font-size: 14px; }
+
+    /* Single column for all card grids on small phones */
+    .activity-grid,
+    .feature-grid,
+    .info-cards,
+    .accommodation-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Hero — tighter padding on smallest screens */
+    .hero {
+        padding: 5rem 0 4rem;
+    }
+
+    .hero h2     { font-size: 1.9rem; }
+    .page-hero h2 { font-size: 1.7rem; }
+
+    /* Buttons full-width on small phones */
+    .btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Exception — nav buttons should stay inline */
+    .nav-links a.btn,
+    .tab-btn {
+        display: inline-block;
+        width: auto;
+    }
+
+    /* Footer links — center and wrap tightly */
+    .footer-links ul {
+        gap: 1rem;
+    }
+
+    /* Section heading size */
+    h2 { font-size: 1.7rem; }
+    h3 { font-size: 1.25rem; }
+
+    /* Planner tool — tighter padding */
+    .planner-tool {
+        padding: 1.5rem;
+    }
+
+    /* Transport cards — ensure readable on tiny screens */
+    .transport-card img {
+        height: 140px;
+    }
+
+    /* Coming soon hero — smaller emoji */
+    .coming-soon-emoji {
+        font-size: 2.5rem;
+    }
+
+    /* Itinerary summary */
+    .itinerary-summary {
+        padding: 1.2rem;
+    }
+
+    /* Generated itinerary day cards — tighter */
+    .planner-day-header {
+        padding: 0.9rem 1rem;
+    }
+
+    .planner-activity-item {
+        gap: 0.6rem;
+    }
+}
+
+/* Very small — 360px (small Android phones) */
+@media (max-width: 360px) {
+    html { font-size: 13px; }
+
+    .container {
+        width: 95%;
+        padding: 0 0.75rem;
+    }
+
+    .hero h2     { font-size: 1.6rem; }
+    .logo h1     { font-size: 1.3rem; }
+}
+
+/* Large desktop — 1400px+ */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1320px;
+    }
+
+    .hero h2 {
+        font-size: 4rem;
+    }
+
+    /* More breathing room on large screens */
+    section {
+        padding: 6rem 0;
+    }
+}
+
+/* Ultra-wide — 1800px+ */
+@media (min-width: 1800px) {
+    .container {
+        max-width: 1600px;
+    }
+}
+
+/* =============================================================================
+   FORM ACCESSIBILITY — FIELDSET STYLES
+   Fieldsets group related inputs semantically. We reset the default browser
+   styling so they look like the rest of the form, not like a box.
+   ============================================================================= */
+
+.checkbox-fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.checkbox-fieldset .checkbox-group {
+    /* Inherits from existing .checkbox-group styles */
+}
+
+/* Ensure all interactive elements have minimum touch target size (44x44px)
+   as recommended by WCAG 2.5.5 for mobile users */
+.btn,
+.tab-btn,
+.day-btn,
+.mobile-menu-toggle,
+.modal-close,
+.remove-activity,
+.search-btn {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Inline buttons that shouldn't be full height (remove × buttons etc.) */
+.remove-activity {
+    min-width: 32px;
+    min-height: 32px;
 }

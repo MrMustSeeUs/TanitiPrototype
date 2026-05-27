@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Skip to main content — allows keyboard users to bypass navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
         <div class="container">
             <div class="logo">
@@ -17,8 +19,8 @@
                     <h1>TANITI ISLAND</h1>
                 </a>
             </div>
-            <nav class="main-nav">
-                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+            <nav class="main-nav" aria-label="Primary navigation">
+                <button type="button" class="mobile-menu-toggle" aria-label="Toggle menu">
                     <span class="menu-icon"></span>
                 </button>
                 <ul class="nav-links">
@@ -32,9 +34,9 @@
         </div>
     </header>
 
-    <main>
+    <main id="main-content" aria-label="Main content">
         <!-- Hero Section -->
-        <section class="hero">
+        <section class="hero" aria-label="Welcome hero banner">
             <div class="container">
                 <div class="hero-content">
                     <h2>WELCOME TO TANITI ISLAND</h2>
@@ -48,52 +50,64 @@
         </section>
 
         <!-- Discover Section -->
-        <section class="discover">
+        <section class="discover" aria-labelledby="discover-heading">
             <div class="container">
                 <h2>DISCOVER TANITI</h2>
-                <div class="feature-grid">
+                <div class="feature-grid grid-6">
                     <div class="feature-card">
-                        <img src="Assets/beaches.jpg" alt="Beautiful beaches of Taniti">
-                        <h3>Beaches</h3>
-                        <p>Explore our sandy and rocky beaches surrounding Yellow Leaf Bay.</p>
-                        <a href="explore.html#beaches" class="read-more">Learn more</a>
+                        <img loading="lazy" decoding="async" src="Assets/beaches.jpg" alt="Beautiful beaches of Taniti">
+                        <div class="feature-card-body">
+                            <h3>Beaches</h3>
+                            <p>Explore our sandy and rocky beaches surrounding Yellow Leaf Bay.</p>
+                            <a href="explore.html#beaches" class="read-more" aria-label="Learn more about beaches on Taniti">Learn more</a>
+                        </div>
                     </div>
                     <div class="feature-card">
-                        <img src="Assets/volcano.jpg" alt="Taniti's active volcano">
-                        <h3>Volcano</h3>
-                        <p>Visit our small but active volcano in the mountainous interior.</p>
-                        <a href="explore.html#volcano" class="read-more">Learn more</a>
+                        <img loading="lazy" decoding="async" src="Assets/volcano.jpg" alt="Taniti's active volcano">
+                        <div class="feature-card-body">
+                            <h3>Volcano</h3>
+                            <p>Visit our small but active volcano in the mountainous interior.</p>
+                            <a href="explore.html#volcano" class="read-more" aria-label="Learn more about the Taniti volcano">Learn more</a>
+                        </div>
                     </div>
                     <div class="feature-card">
-                        <img src="Assets/culture.jpg" alt="Tanitian culture">
-                        <h3>Culture</h3>
-                        <p>Experience the rich cultural heritage of our 20,000 indigenous residents.</p>
-                        <a href="about.html#culture" class="read-more">Learn more</a>
+                        <img loading="lazy" decoding="async" src="Assets/culture.jpg" alt="Tanitian culture">
+                        <div class="feature-card-body">
+                            <h3>Culture</h3>
+                            <p>Experience the rich cultural heritage of our 20,000 indigenous residents.</p>
+                            <a href="about.html#culture" class="read-more" aria-label="Learn more about Taniti culture">Learn more</a>
+                        </div>
                     </div>
                     <div class="feature-card">
-                        <img src="Assets/dinning.jpg" alt="Local cuisine">
-                        <h3>Dining</h3>
-                        <p>Enjoy local fish, American-style meals, and Pan-Asian cuisine at our 10 restaurants.</p>
-                        <a href="explore.html#dining" class="read-more">Learn more</a>
+                        <img loading="lazy" decoding="async" src="Assets/dinning.jpg" alt="Local cuisine">
+                        <div class="feature-card-body">
+                            <h3>Dining</h3>
+                            <p>Enjoy local fish, American-style meals, and Pan-Asian cuisine at our 10 restaurants.</p>
+                            <a href="explore.html#dining" class="read-more">Learn more</a>
+                        </div>
                     </div>
                     <div class="feature-card">
-                        <img src="Assets/lodging.jpg" alt="Accommodation options">
-                        <h3>Lodging</h3>
-                        <p>Choose from our four-star resort, family-owned hotels, B&Bs, and hostels.</p>
-                        <a href="plan.html#accommodations" class="read-more">Learn more</a>
+                        <img loading="lazy" decoding="async" src="Assets/lodging.jpg" alt="Accommodation options">
+                        <div class="feature-card-body">
+                            <h3>Lodging</h3>
+                            <p>Choose from our four-star resort, family-owned hotels, B&Bs, and hostels.</p>
+                            <a href="plan.html#accommodations" class="read-more" aria-label="Learn more about Taniti lodging options">Learn more</a>
+                        </div>
                     </div>
                     <div class="feature-card">
-                        <img src="Assets/activities.jpg" alt="Island activities">
-                        <h3>Activities</h3>
-                        <p>From zip-lining to snorkeling, find the perfect activity for your stay.</p>
-                        <a href="explore.html#activities" class="read-more">Learn more</a>
+                        <img loading="lazy" decoding="async" src="Assets/activities.jpg" alt="Island activities">
+                        <div class="feature-card-body">
+                            <h3>Activities</h3>
+                            <p>From zip-lining to snorkeling, find the perfect activity for your stay.</p>
+                            <a href="explore.html#activities" class="read-more" aria-label="Learn more about Taniti activities">Learn more</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Events and Weather Section -->
-        <section class="info-section">
+        <section class="info-section" aria-label="Upcoming events and weather">
             <div class="container">
                 <div class="info-grid">
                     <div class="events-box">
@@ -127,34 +141,34 @@
         </section>
 
         <!-- Essential Visitor Information -->
-        <section class="essential-info">
+        <section class="essential-info" aria-label="Essential visitor information">
             <div class="container">
                 <h2>ESSENTIAL VISITOR INFORMATION</h2>
                 <div class="info-cards">
                     <div class="info-card">
-                        <img src="Assets/transporte.jpg" alt="Transportation options">
+                        <img loading="lazy" decoding="async" src="Assets/transporte.jpg" alt="Transportation options">
                         <h3>TRANSPORT</h3>
                         <p>Buses, taxis, rental cars, and bikes available for getting around the island.</p>
-                        <a href="plan.html#transportation" class="read-more">Learn more</a>
+                        <a href="plan.html#transportation" class="read-more" aria-label="Learn more about transportation on Taniti">Learn more</a>
                     </div>
                     <div class="info-card">
-                        <img src="Assets/currency.jpg" alt="Currency information">
+                        <img loading="lazy" decoding="async" src="Assets/currency.jpg" alt="Currency information">
                         <h3>CURRENCY</h3>
                         <p>US dollar is used. Euros and yen also accepted at many businesses.</p>
-                        <a href="faq.html#currency" class="read-more">Learn more</a>
+                        <a href="faq.html#currency" class="read-more" aria-label="Learn more about currency on Taniti">Learn more</a>
                     </div>
                     <div class="info-card">
-                        <img src="Assets/safety.jpg" alt="Safety information">
+                        <img loading="lazy" decoding="async" src="Assets/safety.jpg" alt="Safety information">
                         <h3>SAFETY</h3>
                         <p>Low crime rate with hospital and clinics available for medical needs.</p>
-                        <a href="faq.html#safety" class="read-more">Learn more</a>
+                        <a href="faq.html#safety" class="read-more" aria-label="Learn more about safety on Taniti">Learn more</a>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer" aria-label="Site footer">
         <div class="container">
             <div class="footer-links">
                 <ul>

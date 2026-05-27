@@ -196,6 +196,8 @@
     </style>
 </head>
 <body>
+    <!-- Skip to main content — allows keyboard users to bypass navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <!-- Site Header — identical to all other pages -->
     <header class="site-header">
@@ -205,8 +207,8 @@
                     <h1>TANITI ISLAND</h1>
                 </a>
             </div>
-            <nav class="main-nav">
-                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+            <nav class="main-nav" aria-label="Primary navigation">
+                <button type="button" class="mobile-menu-toggle" aria-label="Toggle menu">
                     <span class="menu-icon"></span>
                 </button>
                 <ul class="nav-links">
@@ -220,7 +222,7 @@
         </div>
     </header>
 
-    <main>
+    <main id="main-content" aria-label="Main content">
 
         <!-- Hero Section -->
         <section class="coming-soon-hero">
@@ -295,7 +297,7 @@
     </main>
 
     <!-- Site Footer — identical to all other pages -->
-    <footer class="site-footer">
+    <footer class="site-footer" aria-label="Site footer">
         <div class="container">
             <div class="footer-links">
                 <ul>

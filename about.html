@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Skip to main content — allows keyboard users to bypass navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
         <div class="container">
             <div class="logo">
@@ -17,8 +19,8 @@
                     <h1>TANITI ISLAND</h1>
                 </a>
             </div>
-            <nav class="main-nav">
-                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+            <nav class="main-nav" aria-label="Primary navigation">
+                <button type="button" class="mobile-menu-toggle" aria-label="Toggle menu">
                     <span class="menu-icon"></span>
                 </button>
                 <ul class="nav-links">
@@ -32,17 +34,17 @@
         </div>
     </header>
 
-    <main>
+    <main id="main-content" aria-label="Main content">
         <!-- Hero Section -->
-        <section class="page-hero">
+        <section class="page-hero" aria-label="Page hero banner">
             <div class="container">
                 <h2>ABOUT TANITI ISLAND</h2>
-                <img src="Assets/sky-view.jpg" alt="Beautiful landscape of Taniti Island showing beaches, rainforest and mountains" class="hero-image">
+                <img src="Assets/sky-view.jpg" alt="Beautiful landscape of Taniti Island showing beaches, rainforest and mountains" class="hero-image" loading="eager" decoding="async">
             </div>
         </section>
 
         <!-- Island Overview Section -->
-        <section class="island-overview" id="overview">
+        <section class="island-overview" aria-labelledby="overview-heading" id="overview">
             <div class="container">
                 <h2>ISLAND OVERVIEW</h2>
                 <div class="overview-content">
@@ -56,43 +58,52 @@
                         </ul>
                     </div>
                     <div class="overview-image">
-                        <img src="Assets/aerial.jpg" alt="Aerial view of Taniti Island">
+                        <img loading="lazy" decoding="async" src="Assets/aerial.jpg" alt="Aerial view of Taniti Island">
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Geography & Nature Section -->
-        <section class="geography" id="geography">
+        <section class="geography" aria-labelledby="geography-heading" id="geography">
             <div class="container">
                 <h2>GEOGRAPHY & NATURE</h2>
                 <div class="feature-grid">
                     <div class="feature-card">
-                        <img src="Assets/beaches.jpg" alt="Sandy and rocky beaches of Taniti">
-                        <h3>BEACHES</h3>
-                        <p>Taniti features both sandy and rocky beaches surrounding the island, with the most popular white sand beaches encircling Yellow Leaf Bay.</p>
+                        <img loading="lazy" decoding="async" src="Assets/beaches.jpg" alt="Sandy and rocky beaches surrounding Yellow Leaf Bay on Taniti Island">
+                        <div class="feature-card-body">
+                            <h3>BEACHES</h3>
+                            <p>Taniti features both sandy and rocky beaches surrounding the island, with the most popular white sand beaches encircling Yellow Leaf Bay.</p>
+                            <a href="explore.html#beaches" class="read-more" aria-label="Explore beaches on Taniti Island">Explore beaches</a>
+                        </div>
                     </div>
                     <div class="feature-card">
-                        <img src="Assets/pexels-alex-fanaso-2153283068-32656680.jpg" alt="Lush tropical rainforest">
-                        <h3>RAINFOREST</h3>
-                        <p>Our lush tropical rainforests cover much of the island's interior, offering hiking trails and zip-lining adventures.</p>
+                        <img loading="lazy" decoding="async" src="Assets/pexels-alex-fanaso-2153283068-32656680.jpg" alt="Lush tropical rainforest canopy covering Taniti Island's interior">
+                        <div class="feature-card-body">
+                            <h3>RAINFOREST</h3>
+                            <p>Our lush tropical rainforests cover much of the island's interior, offering hiking trails and zip-lining adventures.</p>
+                            <a href="explore.html#activities" class="read-more" aria-label="Explore rainforest activities on Taniti Island">Explore activities</a>
+                        </div>
                     </div>
                     <div class="feature-card">
-                        <img src="Assets/volcano.jpg" alt="Taniti's active volcano">
-                        <h3>VOLCANO</h3>
-                        <p>The small but active volcano in our mountainous interior is a popular destination for guided tours and photography.</p>
+                        <img loading="lazy" decoding="async" src="Assets/volcano.jpg" alt="Taniti's small but active volcano rising above the island interior">
+                        <div class="feature-card-body">
+                            <h3>VOLCANO</h3>
+                            <p>The small but active volcano in our mountainous interior is a popular destination for guided tours and photography.</p>
+                            <a href="explore.html#activities" class="read-more" aria-label="Explore volcano tours on Taniti Island">Explore tours</a>
+                        </div>
                     </div>
                 </div>
                 <div class="about-map-container">
                     <h3>ISLAND MAP</h3>
-                    <img src="Assets/screenshot-debug.png" alt="Map of Taniti showing key geographical features" class="about-island-map">
+                    <img loading="lazy" decoding="async" src="Assets/screenshot-debug.png" alt="Map of Taniti showing key geographical features" class="about-island-map">
                     <p class="map-caption">Key geographical features of Taniti Island</p>
                 </div>
             </div>
         </section>
 
         <!-- Culture & History Section -->
-        <section class="culture-history" id="culture">
+        <section class="culture-history" aria-labelledby="culture-heading" id="culture">
             <div class="container">
                 <h2>CULTURE & HISTORY</h2>
                 <div class="culture-content">
@@ -117,19 +128,19 @@
                         <p>Visit our local history museum, art galleries, and cultural centers to experience authentic Tanitian traditions and crafts.</p>
                     </div>
                     <div class="culture-image">
-                        <img src="Assets/pexels-oleksandr-plakhota-1270583835-32698879.jpg" alt="Traditional Tanitian cultural celebration">
+                        <img loading="lazy" decoding="async" src="Assets/pexels-oleksandr-plakhota-1270583835-32698879.jpg" alt="Traditional Tanitian cultural celebration">
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Taniti City Section -->
-        <section class="taniti-city" id="city">
+        <section class="taniti-city" aria-labelledby="city-heading" id="city">
             <div class="container">
                 <h2>TANITI CITY</h2>
                 <div class="city-content">
                     <div class="city-image">
-                        <img src="Assets/pexels-titi-1370011725-32683400.jpg" alt="View of Taniti City with native architecture">
+                        <img loading="lazy" decoding="async" src="Assets/pexels-titi-1370011725-32683400.jpg" alt="View of Taniti City with native architecture">
                     </div>
                     <div class="city-text">
                         <ul class="feature-list">
@@ -147,7 +158,7 @@
         </section>
 
         <!-- Merriton Landing Section -->
-        <section class="merriton-landing" id="merriton">
+        <section class="merriton-landing" aria-labelledby="merriton-heading" id="merriton">
             <div class="container">
                 <h2>MERRITON LANDING</h2>
                 <div class="merriton-content">
@@ -163,14 +174,14 @@
                         <a href="explore.html#merriton-landing" class="btn btn-secondary">Discover Merriton Landing</a>
                     </div>
                     <div class="merriton-image">
-                        <img src="Assets/boardwalk.jpg" alt="View of Merriton Landing development area">
+                        <img loading="lazy" decoding="async" src="Assets/boardwalk.jpg" alt="View of Merriton Landing development area">
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer" aria-label="Site footer">
         <div class="container">
             <div class="footer-links">
                 <ul>

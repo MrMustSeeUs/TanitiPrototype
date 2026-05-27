@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Skip to main content — allows keyboard users to bypass navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
         <div class="container">
             <div class="logo">
@@ -17,8 +19,8 @@
                     <h1>TANITI ISLAND</h1>
                 </a>
             </div>
-            <nav class="main-nav">
-                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+            <nav class="main-nav" aria-label="Primary navigation">
+                <button type="button" class="mobile-menu-toggle" aria-label="Toggle menu">
                     <span class="menu-icon"></span>
                 </button>
                 <ul class="nav-links">
@@ -32,16 +34,16 @@
         </div>
     </header>
 
-    <main>
+    <main id="main-content" aria-label="Main content">
         <!-- Hero Section -->
-        <section class="page-hero">
+        <section class="page-hero" aria-label="Page hero banner">
             <div class="container">
                 <h2>PLAN YOUR VISIT TO TANITI</h2>
             </div>
         </section>
 
         <!-- Trip Planner Tool -->
-        <section class="trip-planner" id="planner">
+        <section class="trip-planner" aria-labelledby="planner-heading" id="planner">
             <div class="container">
                 <h2>INTERACTIVE TRIP PLANNER</h2>
                 <div class="planner-tool">
@@ -66,7 +68,7 @@
                         </div>
                         <div class="form-group">
                             <label for="interests">Interests (Select all that apply)</label>
-                            <div class="checkbox-group">
+                            <fieldset class="checkbox-fieldset"><legend class="sr-only">Select your interests</legend><fieldset class="checkbox-fieldset" aria-label="Trip interests"><div class="checkbox-group">
                                 <label><input type="checkbox" name="interests" value="beaches"> Beaches</label>
                                 <label><input type="checkbox" name="interests" value="hiking"> Hiking</label>
                                 <label><input type="checkbox" name="interests" value="volcano"> Volcano</label>
@@ -74,10 +76,10 @@
                                 <label><input type="checkbox" name="interests" value="water-activities"> Water Activities</label>
                                 <label><input type="checkbox" name="interests" value="nightlife"> Nightlife</label>
                             </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Generate Itinerary</button>
+                        </div></fieldset>
+                        <button type="submit" class="btn btn-primary" aria-label="Generate a personalised itinerary based on your dates and interests">Generate Itinerary</button>
                     </form>
-                    <div class="planner-results">
+                    <div class="planner-results" aria-live="polite" aria-label="Generated itinerary results">
                         <p>Your personalized itinerary will appear here after you submit your preferences.</p>
                     </div>
                 </div>
@@ -85,34 +87,34 @@
         </section>
 
         <!-- Accommodations Section -->
-        <section class="accommodations" id="accommodations">
+        <section class="accommodations" aria-labelledby="accommodations-heading" id="accommodations">
             <div class="container">
                 <h2>ACCOMMODATIONS</h2>
                 <p class="section-intro">Taniti offers a wide variety of lodging options to suit every budget and preference, all strictly regulated and regularly inspected by the Tanitian government.</p>
                 <div class="accommodation-grid">
                     <div class="accommodation-card">
-                        <img src="Assets/resort.jpg" alt="Four-star resort on Taniti Island">
+                        <img loading="lazy" decoding="async" src="Assets/resort.jpg" alt="Four-star resort on Taniti Island">
                         <h3>RESORT</h3>
                         <p>Our four-star resort offers luxury accommodations with full amenities, including pools, restaurants, and spa services.</p>
-                        <a href="coming-soon.html?page=accommodations" class="read-more">View resort options</a>
+                        <a href="coming-soon.html?page=accommodations" class="read-more" aria-label="View resort accommodation options on Taniti">View resort options</a>
                     </div>
                     <div class="accommodation-card">
-                        <img src="Assets/hotel.jpg" alt="Family-owned hotels on Taniti">
+                        <img loading="lazy" decoding="async" src="Assets/hotel.jpg" alt="Family-owned hotels on Taniti">
                         <h3>HOTELS</h3>
                         <p>Choose from many small, family-owned hotels offering comfortable rooms and authentic Tanitian hospitality.</p>
-                        <a href="coming-soon.html?page=accommodations" class="read-more">View hotel options</a>
+                        <a href="coming-soon.html?page=accommodations" class="read-more" aria-label="View hotel accommodation options on Taniti">View hotel options</a>
                     </div>
                     <div class="accommodation-card">
-                        <img src="Assets/bandb.jpg" alt="Bed and breakfast accommodations">
+                        <img loading="lazy" decoding="async" src="Assets/bandb.jpg" alt="Bed and breakfast accommodations">
                         <h3>B&Bs</h3>
                         <p>Our growing number of bed and breakfasts provide a cozy, personal experience with home-cooked meals.</p>
                         <a href="coming-soon.html?page=accommodations" class="read-more">View B&B options</a>
                     </div>
                     <div class="accommodation-card">
-                        <img src="Assets/hostel2.jpg" alt="Affordable hostel accommodations">
+                        <img loading="lazy" decoding="async" src="Assets/hostel2.jpg" alt="Affordable hostel accommodations">
                         <h3>HOSTEL</h3>
                         <p>Our inexpensive hostel is perfect for budget travelers and offers dormitory-style accommodations.</p>
-                        <a href="coming-soon.html?page=accommodations" class="read-more">View hostel information</a>
+                        <a href="coming-soon.html?page=accommodations" class="read-more" aria-label="View hostel accommodation information on Taniti">View hostel information</a>
                     </div>
                 </div>
                 <div class="booking-cta">
@@ -122,13 +124,13 @@
         </section>
 
         <!-- Transportation Section -->
-        <section class="transportation" id="transportation">
+        <section class="transportation" aria-labelledby="transportation-heading" id="transportation">
             <div class="container">
                 <h2>TRANSPORTATION</h2>
                 <p class="section-intro">Getting to and around Taniti is convenient with multiple transportation options available.</p>
                 <div class="transport-grid">
                     <div class="transport-card">
-                        <img src="Assets/air.jpg" alt="Small airplane landing at Taniti airport">
+                        <img loading="lazy" decoding="async" src="Assets/air.jpg" alt="Small airplane landing at Taniti airport">
                         <div class="transport-card-body">
                             <h3>✈️ AIR</h3>
                             <p>Most visitors arrive by air at our small airport that accommodates small jets and propeller planes. Airport expansion is underway to accommodate larger jets in the future.</p>
@@ -136,28 +138,28 @@
                         </div>
                     </div>
                     <div class="transport-card">
-                        <img src="Assets/bus.jpg" alt="Public bus in Taniti City">
+                        <img loading="lazy" decoding="async" src="Assets/bus.jpg" alt="Public bus in Taniti City">
                         <div class="transport-card-body">
                             <h3>🚌 BUS</h3>
                             <p>Public buses serve Taniti City from 5 a.m. to 11 p.m. daily. Private buses provide service to the rest of the island.</p>
                         </div>
                     </div>
                     <div class="transport-card">
-                        <img src="Assets/taxi.jpg" alt="Taxi in Taniti">
+                        <img loading="lazy" decoding="async" src="Assets/taxi.jpg" alt="Taxi in Taniti">
                         <div class="transport-card-body">
                             <h3>🚕 TAXI</h3>
                             <p>Taxis are readily available throughout Taniti City for convenient point-to-point transportation.</p>
                         </div>
                     </div>
                     <div class="transport-card">
-                        <img src="Assets/rentals.jpg" alt="Rental car and bikes">
+                        <img loading="lazy" decoding="async" src="Assets/rentals.jpg" alt="Rental car and bikes">
                         <div class="transport-card-body">
                             <h3>🚲 RENTALS</h3>
                             <p>Rental cars are available from a local agency near the airport. Bikes and helmets (required by law) can be rented from several vendors around the island.</p>
                         </div>
                     </div>
                     <div class="transport-card">
-                        <img src="Assets/walking.jpg" alt="Pedestrians walking in Taniti City">
+                        <img loading="lazy" decoding="async" src="Assets/walking.jpg" alt="Pedestrians walking in Taniti City">
                         <div class="transport-card-body">
                             <h3>🚶 WALKING</h3>
                             <p>Taniti City is flat and very walkable. The Merriton Landing area is also easy to explore on foot.</p>
@@ -166,7 +168,7 @@
                 </div>
                 <div class="transport-map">
                     <h3>TRANSPORTATION MAP</h3>
-                    <img src="Assets/route-map.jpg" alt="Map showing transportation routes on Taniti Island" class="island-map">
+                    <img loading="lazy" decoding="async" src="Assets/route-map.jpg" alt="Map showing transportation routes on Taniti Island" class="island-map">
                 </div>
             </div>
         </section>
@@ -178,31 +180,31 @@
                 <p class="section-intro">Essential information to help you prepare for your visit to Taniti Island.</p>
                 <div class="info-grid">
                     <div class="info-card">
-                        <img src="Assets/currency2.jpg" alt="Currency exchange">
+                        <img loading="lazy" decoding="async" src="Assets/currency2.jpg" alt="Currency exchange">
                         <h3>CURRENCY</h3>
                         <p>Taniti uses the U.S. dollar as its currency. Many businesses also accept euros and yen. Several banks facilitate currency exchange, and many businesses accept major credit cards.</p>
                         <a href="faq.html#currency" class="read-more">More currency info</a>
                     </div>
                     <div class="info-card">
-                        <img src="Assets/power.jpg" alt="Power outlet">
+                        <img loading="lazy" decoding="async" src="Assets/power.jpg" alt="Power outlet">
                         <h3>POWER</h3>
                         <p>Power outlets on Taniti are 120 volts, the same as in the United States. Travelers from other regions may need adapters.</p>
                         <a href="faq.html#power" class="read-more">More power info</a>
                     </div>
                     <div class="info-card">
-                        <img src="Assets/language.jpg" alt="People conversing">
+                        <img loading="lazy" decoding="async" src="Assets/language.jpg" alt="People conversing">
                         <h3>LANGUAGE</h3>
                         <p>Many younger Tanitians speak fluent English. Very little English is spoken in rural areas, especially by older residents.</p>
                         <a href="faq.html#language" class="read-more">More language info</a>
                     </div>
                     <div class="info-card">
-                        <img src="Assets/health.jpg" alt="Hospital on Taniti">
+                        <img loading="lazy" decoding="async" src="Assets/health.jpg" alt="Hospital on Taniti">
                         <h3>HEALTH</h3>
                         <p>There is one hospital and several clinics on the island. The hospital has many multilingual employees to assist visitors.</p>
                         <a href="faq.html#health" class="read-more">More health info</a>
                     </div>
                     <div class="info-card">
-                        <img src="Assets/culture.jpg" alt="Holiday celebration">
+                        <img loading="lazy" decoding="async" src="Assets/culture.jpg" alt="Holiday celebration">
                         <h3>HOLIDAYS</h3>
                         <p>Taniti enjoys many national holidays when attractions and restaurants may be closed. Plan your visit accordingly.</p>
                         <a href="faq.html#holidays" class="read-more">View holiday calendar</a>
@@ -233,7 +235,7 @@
         </section>
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer" aria-label="Site footer">
         <div class="container">
             <div class="footer-links">
                 <ul>
