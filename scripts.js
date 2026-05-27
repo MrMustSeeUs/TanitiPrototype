@@ -628,6 +628,302 @@ function initWeatherWidget() {
 // currently simulates a send — hook it up to a backend service (e.g. EmailJS,
 // SendGrid) to make it functional in production.
 // =============================================================================
+// =============================================================================
+// TRIP PLANNER — FORM-DRIVEN ITINERARY GENERATOR
+// Reads the user's arrival/departure dates and selected interests, then builds
+// a personalized day-by-day itinerary and renders it in .planner-results.
+// Each interest maps to a curated pool of activities. Days are filled by
+// rotating through the pool so no activity repeats unnecessarily.
+// =============================================================================
+function initTripPlanner() {
+    const form           = document.querySelector('.planner-form');
+    const resultsDiv     = document.querySelector('.planner-results');
+
+    // Guard — only run on pages that have the planner form
+    if (!form || !resultsDiv) return;
+
+    // -------------------------------------------------------------------------
+    // Activity library — keyed by interest checkbox value.
+    // Each activity has a time slot, emoji icon, title, and short description.
+    // To expand the planner, just add more objects to any array below.
+    // -------------------------------------------------------------------------
+    const activityLibrary = {
+        beaches: [
+            { time: '9:00 AM',  icon: '🏖️', title: 'Taniti Main Beach',      desc: 'Swim, sunbathe, and soak in the crystal-clear waters at Taniti\'s most popular shore.' },
+            { time: '2:00 PM',  icon: '🐚', title: 'Hidden Cove Exploration', desc: 'Discover a secluded cove accessible by a short scenic trail — perfect for snorkeling.' },
+            { time: '10:00 AM', icon: '🌊', title: 'South Shore Surf Lesson', desc: 'Take a beginner-friendly surf lesson with local instructors on the gentler south side.' },
+            { time: '4:00 PM',  icon: '🌅', title: 'Sunset Beach Walk',       desc: 'Stroll the shoreline as the sun dips toward the horizon for unforgettable golden-hour views.' },
+        ],
+        hiking: [
+            { time: '7:30 AM',  icon: '🥾', title: 'Jungle Ridge Trail',      desc: 'A moderate 3-hour hike through lush rainforest canopy with sweeping coastal panoramas at the summit.' },
+            { time: '8:00 AM',  icon: '🦜', title: 'Rainforest Nature Walk',  desc: 'Guided 2-hour walk spotting native birds, exotic flora, and hidden waterfalls deep in the interior.' },
+            { time: '6:00 AM',  icon: '🌄', title: 'Sunrise Summit Hike',     desc: 'Rise early to catch sunrise from Taniti\'s highest accessible peak — an experience you\'ll never forget.' },
+        ],
+        volcano: [
+            { time: '9:00 AM',  icon: '🌋', title: 'Volcano Rim Tour',        desc: 'A guided hike to the rim of Taniti\'s dormant volcano, with a geology talk and stunning crater views.' },
+            { time: '1:00 PM',  icon: '🪨', title: 'Lava Field Walk',         desc: 'Explore ancient lava formations with a knowledgeable local guide explaining Taniti\'s volcanic history.' },
+        ],
+        culture: [
+            { time: '10:00 AM', icon: '🏛️', title: 'Taniti Cultural Center',  desc: 'Explore the island\'s history, traditions, and artwork through interactive exhibits and live demonstrations.' },
+            { time: '12:00 PM', icon: '🍱', title: 'Village Market Lunch',    desc: 'Wander the open-air village market and sample authentic Tanitian dishes prepared by local families.' },
+            { time: '7:00 PM',  icon: '🎶', title: 'Traditional Dance Show',  desc: 'An evening performance of traditional Tanitian dance and music at the cultural amphitheater.' },
+            { time: '3:00 PM',  icon: '🎨', title: 'Local Artisan Workshop',  desc: 'Join a hands-on workshop where local artisans teach traditional weaving, pottery, or woodcarving.' },
+        ],
+        'water-activities': [
+            { time: '9:00 AM',  icon: '🤿', title: 'Guided Snorkel Tour',     desc: 'Explore vibrant coral reefs teeming with tropical fish on a 2-hour guided snorkeling excursion.' },
+            { time: '1:00 PM',  icon: '🚤', title: 'Island Boat Excursion',   desc: 'Hop between Taniti\'s smaller surrounding islands on a half-day boat tour with snorkeling stops.' },
+            { time: '10:00 AM', icon: '🏄', title: 'Kayak Coastal Tour',      desc: 'Paddle along Taniti\'s dramatic coastline, duck into sea caves, and discover hidden beaches by kayak.' },
+            { time: '2:00 PM',  icon: '🪂', title: 'Parasailing Adventure',   desc: 'Soar high above the turquoise lagoon and get a bird\'s-eye view of the entire island.' },
+        ],
+        nightlife: [
+            { time: '7:00 PM',  icon: '🍽️', title: 'Seafood Dinner',         desc: 'Dine on the day\'s freshest catch at a waterfront restaurant as the evening breeze rolls in.' },
+            { time: '9:00 PM',  icon: '🍹', title: 'Beachside Bar Hopping',   desc: 'Experience Taniti\'s lively bar scene along the main strip — try the signature coconut rum cocktail.' },
+            { time: '8:00 PM',  icon: '🎸', title: 'Live Music at The Cove',  desc: 'Local bands perform nightly at The Cove, Taniti\'s most beloved open-air music venue.' },
+        ],
+    };
+
+    // Always include meals and a rest period regardless of interests selected
+    const dailyEssentials = [
+        { time: '7:00 AM',  icon: '☕', title: 'Breakfast',               desc: 'Start the day at your accommodation or a nearby café with fresh tropical fruit and local coffee.' },
+        { time: '12:30 PM', icon: '🥥', title: 'Lunch Break',             desc: 'Recharge with a relaxed midday meal — ask your hotel for today\'s local recommendation.' },
+        { time: '6:00 PM',  icon: '🌺', title: 'Evening Wind-Down',       desc: 'Relax, freshen up, and enjoy a leisurely evening stroll before dinner.' },
+    ];
+
+    // -------------------------------------------------------------------------
+    // Form submit handler — builds and renders the itinerary
+    // -------------------------------------------------------------------------
+    form.addEventListener('submit', (e) => {
+        e.preventDefault(); // Prevent page reload on submit
+
+        // --- Read form values ---
+        const arrivalInput   = form.querySelector('#arrival-date').value;
+        const departureInput = form.querySelector('#departure-date').value;
+        const travelers      = form.querySelector('#travelers').value;
+        const interestBoxes  = form.querySelectorAll('input[name="interests"]:checked');
+        const selectedInterests = Array.from(interestBoxes).map(cb => cb.value);
+
+        // --- Validate dates ---
+        if (!arrivalInput || !departureInput) {
+            showPlannerError('Please select both an arrival and departure date.');
+            return;
+        }
+
+        const arrival   = new Date(arrivalInput);
+        const departure = new Date(departureInput);
+        const tripDays  = Math.round((departure - arrival) / (1000 * 60 * 60 * 24));
+
+        if (tripDays <= 0) {
+            showPlannerError('Departure date must be after your arrival date.');
+            return;
+        }
+
+        if (tripDays > 14) {
+            showPlannerError('The planner supports trips up to 14 days. Please adjust your dates.');
+            return;
+        }
+
+        if (selectedInterests.length === 0) {
+            showPlannerError('Please select at least one interest so we can personalise your itinerary.');
+            return;
+        }
+
+        // --- Build the activity pool from selected interests ---
+        // Gather all activities matching selected interests into one flat array,
+        // then shuffle it so each trip feels unique
+        let activityPool = [];
+        selectedInterests.forEach(interest => {
+            if (activityLibrary[interest]) {
+                activityPool = activityPool.concat(activityLibrary[interest]);
+            }
+        });
+        activityPool = shuffleArray(activityPool);
+
+        // --- Generate the itinerary day by day ---
+        const days = [];
+        let poolIndex = 0;
+
+        for (let i = 0; i < tripDays; i++) {
+            const dayDate = new Date(arrival);
+            dayDate.setDate(arrival.getDate() + i);
+
+            // Pick 2 featured activities per day, cycling through the pool
+            const featuredActivities = [];
+            for (let j = 0; j < 2; j++) {
+                featuredActivities.push(activityPool[poolIndex % activityPool.length]);
+                poolIndex++;
+            }
+
+            // Combine essentials + featured activities, then sort by time
+            const allActivities = [...dailyEssentials, ...featuredActivities];
+            allActivities.sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
+
+            days.push({ date: dayDate, activities: allActivities });
+        }
+
+        // --- Render the itinerary ---
+        renderItinerary(days, travelers, arrival, departure);
+    });
+
+    // -------------------------------------------------------------------------
+    // renderItinerary — builds the full HTML output and injects it into the page
+    // -------------------------------------------------------------------------
+    function renderItinerary(days, travelers, arrival, departure) {
+        const options    = { weekday: 'long', month: 'long', day: 'numeric' };
+        const arrivalStr = arrival.toLocaleDateString('en-US', options);
+        const depStr     = departure.toLocaleDateString('en-US', options);
+
+        // Build the day cards HTML
+        const dayCardsHTML = days.map((day, index) => {
+            const dateLabel = day.date.toLocaleDateString('en-US', options);
+            const isFirst   = index === 0;
+            const isLast    = index === days.length - 1;
+
+            // Add arrival/departure badges to the first and last day
+            const badge = isFirst
+                ? '<span class="day-badge arrival-badge">✈️ Arrival Day</span>'
+                : isLast
+                ? '<span class="day-badge departure-badge">✈️ Departure Day</span>'
+                : '';
+
+            const activitiesHTML = day.activities.map(act => `
+                <div class="planner-activity-item">
+                    <div class="planner-activity-time">${act.time}</div>
+                    <div class="planner-activity-icon">${act.icon}</div>
+                    <div class="planner-activity-details">
+                        <strong>${act.title}</strong>
+                        <p>${act.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="planner-day-card">
+                    <div class="planner-day-header">
+                        <h3>Day ${index + 1} — ${dateLabel}</h3>
+                        ${badge}
+                    </div>
+                    <div class="planner-day-activities">
+                        ${activitiesHTML}
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Inject the full itinerary into the results container
+        resultsDiv.innerHTML = `
+            <div class="generated-itinerary">
+                <div class="itinerary-summary">
+                    <h3>🌺 Your Taniti Island Itinerary</h3>
+                    <p>
+                        <strong>${days.length}-day trip</strong> for
+                        <strong>${travelers} traveller${travelers === '1' ? '' : 's'}</strong>
+                        &nbsp;·&nbsp; ${arrivalStr} → ${depStr}
+                    </p>
+                </div>
+
+                <div class="planner-day-cards">
+                    ${dayCardsHTML}
+                </div>
+
+                <div class="itinerary-actions">
+                    <button class="btn btn-secondary print-itinerary-btn">🖨️ Print Itinerary</button>
+                    <button class="btn btn-primary replan-btn">🔄 Plan Again</button>
+                </div>
+
+                <p class="itinerary-disclaimer">
+                    * This itinerary is a personalised suggestion based on your interests.
+                    Times are approximate — feel free to adjust to your own pace!
+                </p>
+            </div>
+        `;
+
+        // Scroll smoothly to the results so the user sees them
+        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // --- Print button ---
+        resultsDiv.querySelector('.print-itinerary-btn').addEventListener('click', () => {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Taniti Island Itinerary</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px; }
+                        h2, h3 { color: #0d7e83; }
+                        .planner-day-card { margin-bottom: 30px; border: 1px solid #ddd; border-radius: 6px; padding: 15px; page-break-inside: avoid; }
+                        .planner-day-header { background: #0d7e83; color: white; padding: 10px 15px; margin: -15px -15px 15px; border-radius: 6px 6px 0 0; }
+                        .planner-day-header h3 { color: white; margin: 0; }
+                        .planner-activity-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #eee; }
+                        .planner-activity-time { min-width: 90px; font-weight: bold; color: #0d7e83; font-size: 0.9em; }
+                        .planner-activity-icon { font-size: 1.4em; }
+                        .planner-activity-details strong { display: block; margin-bottom: 2px; }
+                        .planner-activity-details p { margin: 0; font-size: 0.9em; color: #555; }
+                        .itinerary-disclaimer { font-size: 0.85em; color: #888; margin-top: 30px; border-top: 1px solid #ddd; padding-top: 15px; }
+                        @media print { body { font-size: 11pt; } }
+                    </style>
+                </head>
+                <body>
+                    <h2>🌺 Taniti Island — Your Personalised Itinerary</h2>
+                    ${resultsDiv.querySelector('.generated-itinerary').innerHTML
+                        .replace(/<div class="itinerary-actions">[\s\S]*?<\/div>/, '')
+                    }
+                    <p style="margin-top:40px; font-size:0.85em; color:#888;">
+                        Prepared by the Taniti Island Tourism Board · tanitiisland.com
+                    </p>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            setTimeout(() => { printWindow.focus(); printWindow.print(); }, 400);
+        });
+
+        // --- Plan Again button — resets the form and results ---
+        resultsDiv.querySelector('.replan-btn').addEventListener('click', () => {
+            resultsDiv.innerHTML = '<p>Your personalised itinerary will appear here after you submit your preferences.</p>';
+            form.reset();
+            form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+
+    // -------------------------------------------------------------------------
+    // showPlannerError — displays a friendly inline validation message
+    // -------------------------------------------------------------------------
+    function showPlannerError(message) {
+        resultsDiv.innerHTML = `
+            <div class="planner-error">
+                <p>⚠️ ${message}</p>
+            </div>
+        `;
+    }
+
+    // -------------------------------------------------------------------------
+    // shuffleArray — randomises activity order using Fisher-Yates algorithm
+    // so each generated itinerary feels fresh and not identical every time
+    // -------------------------------------------------------------------------
+    function shuffleArray(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    // -------------------------------------------------------------------------
+    // timeToMinutes — converts "9:00 AM" style strings to total minutes
+    // Used for sorting activities chronologically within a day
+    // -------------------------------------------------------------------------
+    function timeToMinutes(timeStr) {
+        const [time, period] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+        if (period === 'PM' && hours < 12) hours += 12;
+        if (period === 'AM' && hours === 12) hours = 0;
+        return hours * 60 + minutes;
+    }
+}
+
 function initItineraryBuilder() {
     const itineraryBuilder = document.querySelector('.itinerary-builder');
 
@@ -1388,6 +1684,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Forms
     initFormValidation();
+    initTripPlanner();
 
     // Interactive widgets
     initGalleryLightbox();

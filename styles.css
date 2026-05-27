@@ -35,6 +35,8 @@
 html {
     font-size: 16px;
     scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Keeps anchor links from hiding behind the sticky header */
+    overflow-y: scroll;       /* Prevents layout shift when scrollbar appears/disappears */
 }
 
 body {
@@ -424,12 +426,14 @@ section {
     background-color: var(--primary-color);
 }
 
-.map-container {
+/* Used on the About page to center the static island overview map */
+.about-map-container {
     margin-top: 3rem;
     text-align: center;
 }
 
-.island-map {
+/* Static map image on the About page — scales naturally with the container */
+.about-island-map {
     max-width: 100%;
     margin: 0 auto;
     border-radius: var(--border-radius);
@@ -720,12 +724,14 @@ section {
     gap: 2rem;
 }
 
+/* Activity cards — lift on hover and fade in on scroll via IntersectionObserver */
 .activity-card {
     background-color: #fff;
     border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: var(--shadow);
     transition: var(--transition);
+    animation: fadeIn 0.5s ease-out forwards;
 }
 
 .activity-card:hover {
@@ -883,12 +889,14 @@ section {
     display: block;
 }
 
+/* Each FAQ question card — tropical teal top border adds visual brand accent */
 .faq-item {
     background-color: #fff;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     margin-bottom: 1.5rem;
     overflow: hidden;
+    border-top: 4px solid var(--primary-color);
 }
 
 .faq-item h3 {
@@ -911,7 +919,9 @@ section {
     content: '-';
 }
 
+/* FAQ answer panel — hidden by default, shown when parent .faq-item has .active class */
 .faq-answer {
+    display: none;
     padding: 0 1.5rem 1.5rem;
     border-top: 1px solid #eee;
 }
@@ -953,6 +963,7 @@ section {
     border-radius: var(--border-radius);
 }
 
+/* Textarea gets extra height so users have comfortable room to type messages */
 .form-row textarea {
     min-height: 150px;
 }
@@ -1210,12 +1221,7 @@ section {
     }
 }
 
-.feature-card,
-.info-card,
-.accommodation-card,
-.activity-card {
-    animation: fadeIn 0.5s ease-out forwards;
-}
+/* Note: .activity-card animation is already merged into the main .activity-card rule above. */
 
 /* Accessibility */
 :focus {
@@ -1269,9 +1275,7 @@ section {
 .feature-card,
 .info-card,
 .accommodation-card,
-.faq-item {
-    border-top: 4px solid var(--primary-color);
-}
+/* Note: .faq-item border-top is already merged into the main .faq-item rule above. */
 
 .activity-card:nth-child(2n) {
     border-top: 4px solid var(--secondary-color);
@@ -1331,10 +1335,7 @@ section {
     font-style: italic;
 }
 
-/* FAQ Accordion Functionality */
-.faq-answer {
-    display: none;
-}
+/* Note: display:none for .faq-answer is already set in the main rule above. */
 
 .faq-item.active .faq-answer {
     display: block;
@@ -2248,17 +2249,8 @@ textarea:focus-visible {
     outline-offset: 3px;
 }
 
-/* Smooth scrolling for anchor links */
-html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 80px;
-    /* Adjust based on header height */
-}
-
-/* Prevent content jumping when scrollbar appears/disappears */
-html {
-    overflow-y: scroll;
-}
+/* Note: scroll-behavior, scroll-padding-top, and overflow-y
+   are all defined in the html rule at the top of this file. */
 
 /* Improve form element consistency */
 button,
@@ -2270,11 +2262,7 @@ textarea {
     line-height: inherit;
 }
 
-/* Ensure images don't overflow their containers */
-img {
-    max-width: 100%;
-    height: auto;
-}
+/* Note: max-width and height auto for img are already set at the top of this file. */
 
 /* Ensure proper text wrapping */
 p,
@@ -2287,4 +2275,179 @@ h6 {
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;
+}
+/* =============================================================================
+   TRIP PLANNER — GENERATED ITINERARY STYLES
+   Styles for the day cards, activity rows, badges, and action buttons
+   that appear when the trip planner form is submitted.
+   ============================================================================= */
+
+/* Wrapper for the full generated output */
+.generated-itinerary {
+    margin-top: 2rem;
+}
+
+/* Summary bar at the top showing trip length and traveler count */
+.itinerary-summary {
+    background: linear-gradient(135deg, var(--primary-color), #10a5ab);
+    color: var(--light-text);
+    padding: 1.5rem 2rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 2rem;
+}
+
+.itinerary-summary h3 {
+    color: var(--light-text);
+    margin-bottom: 0.5rem;
+}
+
+.itinerary-summary p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Container that holds all the day cards in a single column */
+.planner-day-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Individual day card */
+.planner-day-card {
+    background: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border-top: 4px solid var(--primary-color);
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Teal header bar at the top of each day card */
+.planner-day-header {
+    background-color: var(--primary-color);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.planner-day-header h3 {
+    color: var(--light-text);
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Arrival / Departure badges shown on first and last day */
+.day-badge {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.arrival-badge {
+    background-color: var(--success-color);
+    color: #fff;
+}
+
+.departure-badge {
+    background-color: var(--secondary-color);
+    color: var(--dark-color);
+}
+
+/* List of activities within a day card */
+.planner-day-activities {
+    padding: 1rem 1.5rem;
+}
+
+/* Single activity row — time | icon | title + description */
+.planner-activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #f0f4f8;
+}
+
+.planner-activity-item:last-child {
+    border-bottom: none;
+}
+
+/* Time column — fixed width so all times align neatly */
+.planner-activity-time {
+    min-width: 85px;
+    font-weight: 700;
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    padding-top: 2px;
+}
+
+/* Emoji icon column */
+.planner-activity-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    padding-top: 2px;
+}
+
+/* Title and description */
+.planner-activity-details strong {
+    display: block;
+    color: var(--dark-color);
+    margin-bottom: 0.2rem;
+}
+
+.planner-activity-details p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* Print and Plan Again buttons */
+.itinerary-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+/* Small disclaimer beneath the itinerary */
+.itinerary-disclaimer {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #888;
+    margin-top: 1.5rem;
+    font-style: italic;
+}
+
+/* Inline validation error message */
+.planner-error {
+    background-color: #fff3cd;
+    border: 1px solid var(--warning-color);
+    border-radius: var(--border-radius);
+    padding: 1rem 1.5rem;
+    color: var(--dark-color);
+    margin-top: 1rem;
+}
+
+/* Responsive — stack time and icon above details on very small screens */
+@media (max-width: 480px) {
+    .planner-activity-item {
+        flex-wrap: wrap;
+    }
+
+    .planner-activity-time {
+        min-width: 100%;
+        font-size: 0.85rem;
+    }
+
+    .planner-day-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
