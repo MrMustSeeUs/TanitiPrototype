@@ -829,6 +829,7 @@ section {
 .form-group select:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(13, 126, 131, 0.12);
+    margin: 10px;
 }
 
 .checkbox-group {
@@ -1323,6 +1324,10 @@ section {
     z-index: 1;
 }
 
+.search-form {
+    margin: 12px;
+}
+
 .search-form label {
     display: block;
     margin-bottom: 0.5rem;
@@ -1356,6 +1361,7 @@ section {
     font-family: var(--font-body);
     font-size: 0.95rem;
     transition: var(--transition);
+    border-radius: 15px;
 }
 
 .search-btn:hover {
