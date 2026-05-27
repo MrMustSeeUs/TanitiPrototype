@@ -559,9 +559,17 @@ section {
 /* Info Section */
 .info-grid {
     display: grid;
-    /* 5 equal columns on desktop — all cards in one row */
+    /* Default: 5 equal columns — used for practical info on plan.html */
     grid-template-columns: repeat(5, 1fr);
     gap: 1.5rem;
+}
+
+/* 2-card variant — used for Events + Weather on index.html.
+   Centers the two cards and caps their width so they don't stretch too wide. */
+.info-grid--2 {
+    grid-template-columns: repeat(2, minmax(280px, 480px));
+    justify-content: center;
+    gap: 2rem;
 }
 
 /* Responsive: collapses same as info-cards */
@@ -570,6 +578,7 @@ section {
 }
 @media (max-width: 680px) {
     .info-grid { grid-template-columns: repeat(2, 1fr); }
+    .info-grid--2 { grid-template-columns: 1fr; }
 }
 @media (max-width: 420px) {
     .info-grid { grid-template-columns: 1fr; }
@@ -829,7 +838,6 @@ section {
 .form-group select:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(13, 126, 131, 0.12);
-    margin: 10px;
 }
 
 .checkbox-group {
@@ -1317,15 +1325,15 @@ section {
     clip-path: ellipse(55% 100% at 50% 100%);
 }
 
+.search-form {
+    margin: 12px;
+}
+
 .search-container {
     max-width: 700px;
     margin: 0 auto;
     position: relative;
     z-index: 1;
-}
-
-.search-form {
-    margin: 12px;
 }
 
 .search-form label {
@@ -1361,7 +1369,6 @@ section {
     font-family: var(--font-body);
     font-size: 0.95rem;
     transition: var(--transition);
-    border-radius: 15px;
 }
 
 .search-btn:hover {
