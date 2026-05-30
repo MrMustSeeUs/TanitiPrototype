@@ -5,6 +5,7 @@
   "observability": {
     "enabled": true
   },
+  // Serve all files in the project root as static assets
   "assets": {
     "directory": "."
   },

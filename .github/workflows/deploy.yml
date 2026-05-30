@@ -141,14 +141,14 @@ jobs:
       - name: Install Wrangler
         run: npm install -g wrangler
 
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          wrangler pages deploy . \
-            --project-name=taniti-island \
-            --commit-dirty=true
+          # Deploy as a Cloudflare Worker with static assets
+          # (matches how the project was initially set up via the dashboard)
+          wrangler deploy --compatibility-date=2026-05-30
 
       - name: Deployment complete
         run: |
