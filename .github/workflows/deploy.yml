@@ -70,6 +70,8 @@ jobs:
               | grep -v '^tel' \
               | grep '\.html' \
               | sed 's/?.*//') # Strip query strings like ?page=contact
+            # Strip anchor fragments (#section) — we only check the file exists, not the anchor
+            links=$(echo "$links" | sed 's/#.*//' | grep -v '^$' | sort -u)
             while IFS= read -r link; do
               if [ -n "$link" ] && [ ! -f "$link" ]; then
                 echo "❌ Broken link in $file: $link"
