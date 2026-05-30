@@ -14,6 +14,7 @@
  * Last updated: 2026
  */
 
+
 // =============================================================================
 // MOBILE MENU
 // Handles the hamburger menu toggle for small screens.
