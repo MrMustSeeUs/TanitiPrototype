@@ -4,13 +4,13 @@ A fully responsive, multi-page tourism website for the fictional island of Tanit
 Built as a portfolio project to demonstrate front-end development, cloud deployment,
 CI/CD automation, and web security best practices.
 
-**[🔗 Live Demo](#)** · **[📋 Report a Bug](https://github.com/MrMustSeeUs/TanitiPrototype/issues)** · **[✨ Request a Feature](https://github.com/MrMustSeeUs/TanitiPrototype/issues)**
+**[🔗 Live Demo](https://taniti-island.mrabrahammacias.workers.dev)** · **[📋 Report a Bug](https://github.com/MrMustSeeUs/TanitiPrototype/issues)** · **[✨ Request a Feature](https://github.com/MrMustSeeUs/TanitiPrototype/issues)**
 
 ---
 
 ## 📸 Screenshots
 
-> _Live deployment screenshots coming in Sprint 2_
+> **🌐 [View Live Site](https://taniti-island.mrabrahammacias.workers.dev)**
 
 ---
 
@@ -21,7 +21,7 @@ CI/CD automation, and web security best practices.
 - **Gallery lightbox** — Full-screen image viewer with keyboard navigation (arrow keys + Escape)
 - **FAQ search** — Real-time search with keyword highlighting across all FAQ categories
 - **Currency converter** — Convert between USD, EUR, GBP, JPY, and the fictional Taniti Dollar
-- **Weather widget** — 5-day forecast display _(live API integration in progress)_
+- **Weather widget** — 5-day forecast display _(live Open-Meteo API integration — Sprint 3)_
 - **Interactive map** — Clickable location pins with category filtering
 - **Countdown timer** — Live countdown to upcoming island events
 - **Mobile responsive** — Fully functional hamburger menu and fluid layouts on all screen sizes
@@ -35,10 +35,10 @@ CI/CD automation, and web security best practices.
 |---|---|
 | Frontend | HTML5, CSS3, Vanilla JavaScript (ES6+) |
 | Styling | Custom CSS design system with CSS variables |
-| Deployment | Cloudflare Pages _(coming in Sprint 2)_ |
-| CI/CD | GitHub Actions _(coming in Sprint 2)_ |
-| Security | CSP headers, Cloudflare WAF _(coming in Sprint 2)_ |
-| Monitoring | UptimeRobot, Sentry _(coming in Sprint 2)_ |
+| Deployment | Cloudflare Workers with global CDN + automatic HTTPS |
+| CI/CD | GitHub Actions — auto-deploy on every push to `main` |
+| Security | CSP headers, GitHub Secrets, WCAG 2.1 AA, OWASP practices |
+| Monitoring | UptimeRobot, Sentry *(Sprint 4)* |
 
 ---
 
@@ -93,11 +93,11 @@ TanitiPrototype/
 - [x] Professional inline documentation throughout `scripts.js`
 - [x] This README
 
-### 🔄 Sprint 2 — Cloud & DevOps (In Progress)
-- [ ] Deploy to Cloudflare Pages with automatic HTTPS
-- [ ] GitHub Actions CI/CD pipeline — auto-deploy on every push to `main`
-- [ ] Image optimization — compress assets from ~5MB to <200KB each
-- [ ] Security headers — CSP, X-Frame-Options, HSTS via `_headers` file
+### ✅ Sprint 2 — Cloud & DevOps (Complete)
+- [x] Deploy to Cloudflare Workers with automatic HTTPS
+- [x] GitHub Actions CI/CD pipeline — auto-deploy on every push to `main`
+- [x] HTML validation, internal link checker, asset reference checker in pipeline
+- [x] Asset filename normalization — lowercase for Linux/Cloudflare compatibility
 
 ### 📋 Sprint 3 — Live Data
 - [ ] Replace mock weather data with Open-Meteo API (free, no key required)
@@ -118,7 +118,7 @@ This project follows OWASP best practices for front-end security:
 
 - No API keys or secrets stored in the codebase
 - User input is sanitized before DOM insertion
-- Security headers enforced at the CDN layer (Cloudflare) — _coming Sprint 2_
+- Security headers enforced at the CDN layer (Cloudflare) — _Sprint 3_
 - Automated dependency vulnerability scanning via Dependabot — _coming Sprint 4_
 
 ---
@@ -143,6 +143,8 @@ Feel free to check the [issues page](https://github.com/MrMustSeeUs/TanitiProtot
 - Location: Evans, Colorado
 
 ---
+
+## 📄 License
 
 CC BY-NC 4.0
 
