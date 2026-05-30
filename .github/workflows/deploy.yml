@@ -114,18 +114,14 @@ jobs:
         run: |
           echo "Auditing asset file sizes..."
           warn=0
-          for img in Assets/*.jpg Assets/*.png Assets/*.webp 2>/dev/null; do
-            [ -f "$img" ] || continue
+          find Assets/ -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.webp" \) | while read img; do
             size=$(stat -c%s "$img")
             size_kb=$((size / 1024))
             if [ $size -gt 1048576 ]; then
               echo "⚠️  Large asset (${size_kb}KB): $img — consider compressing"
-              warn=1
             fi
           done
-          if [ $warn -eq 0 ]; then
-            echo "✅ All assets are under 1MB"
-          fi
+          echo "✅ Asset size audit complete"
           # This step warns but does not fail the build
           exit 0
 
