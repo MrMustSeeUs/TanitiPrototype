@@ -1,0 +1,158 @@
+# =============================================================================
+# Taniti Island — CI/CD Pipeline
+#
+# Runs on every push to main and every pull request.
+# Pipeline has two stages:
+#   1. quality-check — validates HTML and scans for issues
+#   2. deploy        — ships to Cloudflare Pages (main branch only)
+#
+# Required GitHub Secrets (Settings → Secrets → Actions):
+#   CLOUDFLARE_API_TOKEN  — Cloudflare API token with Pages:Edit permission
+#   CLOUDFLARE_ACCOUNT_ID — Your Cloudflare account ID
+# =============================================================================
+
+name: CI/CD — Build, Check & Deploy
+
+# Trigger on every push to main and every pull request targeting main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  # ---------------------------------------------------------------------------
+  # JOB 1: Quality Checks
+  # Runs on every push and PR — catches issues before they ever go live
+  # ---------------------------------------------------------------------------
+  quality-check:
+    name: 🔍 Quality Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1 — Check out the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2 — Validate that all HTML files are well-formed
+      # Uses the W3C HTML validator to catch missing tags, bad attributes, etc.
+      - name: Validate HTML files
+        run: |
+          echo "Installing HTML validator..."
+          npm install -g html-validate
+          echo "Validating HTML files..."
+          html-validate \
+            index.html \
+            about.html \
+            explore.html \
+            plan.html \
+            faq.html \
+            coming-soon.html \
+            --formatter codeframe \
+            || echo "⚠️  HTML validation warnings found — review above"
+
+      # Step 3 — Check that all internal links point to files that exist
+      # Catches broken hrefs before visitors encounter 404s
+      - name: Check internal links
+        run: |
+          echo "Checking internal links..."
+          # Find all href values pointing to local .html files
+          broken=0
+          for file in *.html; do
+            # Extract all local href values (not http, not #, not mailto, not tel)
+            links=$(grep -oP 'href="\K[^"]+(?=")' "$file" \
+              | grep -v '^http' \
+              | grep -v '^#' \
+              | grep -v '^mailto' \
+              | grep -v '^tel' \
+              | grep '\.html' \
+              | sed 's/?.*//') # Strip query strings like ?page=contact
+            while IFS= read -r link; do
+              if [ -n "$link" ] && [ ! -f "$link" ]; then
+                echo "❌ Broken link in $file: $link"
+                broken=1
+              fi
+            done <<< "$links"
+          done
+          if [ $broken -eq 0 ]; then
+            echo "✅ All internal links are valid"
+          else
+            exit 1
+          fi
+
+      # Step 4 — Check that all referenced asset files actually exist
+      # Catches missing or misspelled image paths before they become 404s
+      - name: Check asset references
+        run: |
+          echo "Checking asset file references..."
+          missing=0
+          for file in *.html scripts.js; do
+            [ -f "$file" ] || continue
+            # Extract all Assets/ paths
+            assets=$(grep -oP 'Assets/\K[^"'\'')\s]+' "$file" || true)
+            while IFS= read -r asset; do
+              if [ -n "$asset" ] && [ ! -f "Assets/$asset" ]; then
+                echo "❌ Missing asset in $file: Assets/$asset"
+                missing=1
+              fi
+            done <<< "$assets"
+          done
+          if [ $missing -eq 0 ]; then
+            echo "✅ All asset references are valid"
+          else
+            exit 1
+          fi
+
+      # Step 5 — File size audit — warn if any asset is over 1MB
+      # Large images hurt performance — this keeps the team honest
+      - name: Audit asset file sizes
+        run: |
+          echo "Auditing asset file sizes..."
+          warn=0
+          for img in Assets/*.jpg Assets/*.png Assets/*.webp 2>/dev/null; do
+            [ -f "$img" ] || continue
+            size=$(stat -c%s "$img")
+            size_kb=$((size / 1024))
+            if [ $size -gt 1048576 ]; then
+              echo "⚠️  Large asset (${size_kb}KB): $img — consider compressing"
+              warn=1
+            fi
+          done
+          if [ $warn -eq 0 ]; then
+            echo "✅ All assets are under 1MB"
+          fi
+          # This step warns but does not fail the build
+          exit 0
+
+  # ---------------------------------------------------------------------------
+  # JOB 2: Deploy to Cloudflare Pages
+  # Only runs on pushes to main (not on PRs) and only if quality checks pass
+  # ---------------------------------------------------------------------------
+  deploy:
+    name: 🚀 Deploy to Cloudflare Pages
+    runs-on: ubuntu-latest
+    needs: quality-check          # Must pass quality checks first
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      # Step 1 — Check out the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2 — Deploy to Cloudflare Pages using Wrangler
+      # Uses secrets stored in GitHub — never hardcoded in source
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy . --project-name=taniti-island --commit-dirty=true
+
+      # Step 3 — Print the live URL so it's visible in the Actions log
+      - name: Deployment complete
+        run: |
+          echo "✅ Deployed successfully!"
+          echo "🌐 Live URL: https://taniti-island.mrabrahammacias.workers.dev"
