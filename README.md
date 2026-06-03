@@ -38,7 +38,7 @@ CI/CD automation, and web security best practices.
 | Deployment | Cloudflare Workers with global CDN + automatic HTTPS |
 | CI/CD | GitHub Actions — auto-deploy on every push to `main` |
 | Security | CSP headers, GitHub Secrets, WCAG 2.1 AA, OWASP practices |
-| Monitoring | UptimeRobot uptime alerts *(Sprint 4)* |
+| Monitoring | [UptimeRobot](https://stats.uptimerobot.com/cepQG2Mmhh) — 5-min interval uptime monitoring with email alerts |
 
 ---
 
