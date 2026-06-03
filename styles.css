@@ -997,6 +997,15 @@ section {
 .transport-map {
     margin-top: 3rem;
     text-align: center;
+    padding: 2rem;
+    background: var(--warm-bg);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid rgba(13, 126, 131, 0.1);
+}
+
+.transport-map h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
 }
 
 /* Responsive — 3 cols on large tablet, 2 on small tablet, 1 on mobile */
@@ -1071,10 +1080,16 @@ section {
 }
 
 .island-map {
-    width: 100%;
-    height: 400px;
-    background-color: #eee;
-    border-radius: var(--border-radius);
+    /* Image is 800x765 (nearly square) — cap at 480px so it looks like a map
+       panel, not a full-width banner. Centers itself, never stretches. */
+    display: block;
+    width: auto;
+    max-width: 480px;
+    height: auto;
+    margin: 1.5rem auto 0;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(13, 126, 131, 0.15);
 }
 
 .map-controls {
@@ -1323,10 +1338,6 @@ section {
     height: 50px;
     background: var(--light-color);
     clip-path: ellipse(55% 100% at 50% 100%);
-}
-
-.search-form {
-    margin: 12px;
 }
 
 .search-container {
@@ -3384,7 +3395,7 @@ h6 {
     }
 
     .island-map {
-        height: 280px;
+        max-width: 100%;
     }
 
     /* Dining and shopping drop to 1 col on mobile */
