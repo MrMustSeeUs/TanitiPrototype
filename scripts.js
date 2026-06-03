@@ -585,37 +585,116 @@ function initSmoothScrolling() {
 //   https://api.open-meteo.com/v1/forecast?latitude=14.0&longitude=145.0
 //   &daily=temperature_2m_max,weathercode&temperature_unit=fahrenheit&timezone=Pacific/Guam
 // =============================================================================
+// =============================================================================
+// WEATHER WIDGET — LIVE DATA
+// Fetches real forecast data from Open-Meteo (https://open-meteo.com).
+// Open-Meteo is 100% free with no API key required — just a URL with
+// coordinates. Taniti is fictional so we use a tropical Pacific location
+// (similar latitude/climate to Hawaii) as a stand-in.
+//
+// Two targets are updated:
+//   .weather-widget — the 5-day forecast cards on plan.html
+//   .current-weather — the compact Today snapshot on index.html
+//
+// Falls back to friendly placeholder values if the API is unreachable.
+// =============================================================================
 function initWeatherWidget() {
-    const weatherWidget = document.querySelector('.weather-widget');
+    // Taniti is fictional — using Honolulu, Hawaii as a tropical Pacific stand-in
+    // Coordinates: 21.3069° N, 157.8583° W
+    const API_URL = 'https://api.open-meteo.com/v1/forecast'
+        + '?latitude=21.3069'
+        + '&longitude=-157.8583'
+        + '&daily=weather_code,temperature_2m_max,temperature_2m_min'
+        + '&temperature_unit=fahrenheit'
+        + '&timezone=Pacific%2FHonolulu'
+        + '&forecast_days=7';
 
-    if (!weatherWidget) return;
+    // WMO weather code → human-readable description + emoji
+    // Full code list: https://open-meteo.com/en/docs#weathervariables
+    function decodeWeatherCode(code) {
+        if (code === 0)                return { desc: 'Clear Sky',         icon: '☀️' };
+        if (code <= 2)                 return { desc: 'Partly Cloudy',     icon: '⛅' };
+        if (code === 3)                return { desc: 'Overcast',          icon: '☁️' };
+        if (code <= 49)                return { desc: 'Foggy',             icon: '🌫️' };
+        if (code <= 57)                return { desc: 'Drizzle',           icon: '🌦️' };
+        if (code <= 67)                return { desc: 'Rain',              icon: '🌧️' };
+        if (code <= 77)                return { desc: 'Snow',              icon: '❄️' };
+        if (code <= 82)                return { desc: 'Rain Showers',      icon: '🌦️' };
+        if (code <= 86)                return { desc: 'Snow Showers',      icon: '🌨️' };
+        if (code >= 95)                return { desc: 'Thunderstorm',      icon: '⛈️' };
+        return                                { desc: 'Mixed Conditions',  icon: '🌤️' };
+    }
 
-    // Placeholder forecast — swap this array with real API data when ready
-    const weatherData = [
-        { date: 'Today',    icon: '☀️',  temp: '84°F', desc: 'Sunny' },
-        { date: 'Tomorrow', icon: '⛅',  temp: '82°F', desc: 'Partly Cloudy' },
-        { date: 'Wed',      icon: '🌦️', temp: '79°F', desc: 'Scattered Showers' },
-        { date: 'Thu',      icon: '☀️',  temp: '83°F', desc: 'Sunny' },
-        { date: 'Fri',      icon: '☀️',  temp: '85°F', desc: 'Sunny' },
-    ];
+    // Short day label from a date string like "2026-06-01"
+    function getDayLabel(dateStr, index) {
+        if (index === 0) return 'Today';
+        if (index === 1) return 'Tomorrow';
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        return days[new Date(dateStr).getDay()];
+    }
 
-    weatherData.forEach(day => {
-        const dayElement = document.createElement('div');
-        dayElement.className = 'weather-day';
-        dayElement.innerHTML = `
-            <div class="weather-date">${day.date}</div>
-            <div class="weather-icon">${day.icon}</div>
-            <div class="weather-temp">${day.temp}</div>
-            <div class="weather-desc">${day.desc}</div>
-        `;
-        weatherWidget.appendChild(dayElement);
-    });
+    // Render the 5-day forecast cards into .weather-widget
+    function renderForecastWidget(data) {
+        const widget = document.querySelector('.weather-widget');
+        if (!widget) return;
 
-    // Show a timestamp so users know how fresh the data is
-    const lastUpdated = document.createElement('div');
-    lastUpdated.className = 'weather-updated mt-2 text-center fs-small';
-    lastUpdated.textContent = `Last updated: ${new Date().toLocaleString()}`;
-    weatherWidget.parentNode.appendChild(lastUpdated);
+        widget.innerHTML = ''; // Clear any existing content
+
+        data.daily.time.slice(0, 5).forEach((dateStr, i) => {
+            const { desc, icon } = decodeWeatherCode(data.daily.weather_code[i]);
+            const high = Math.round(data.daily.temperature_2m_max[i]);
+            const low  = Math.round(data.daily.temperature_2m_min[i]);
+
+            const day = document.createElement('div');
+            day.className = 'weather-day';
+            day.innerHTML = `
+                <div class="weather-date">${getDayLabel(dateStr, i)}</div>
+                <div class="weather-icon" aria-hidden="true">${icon}</div>
+                <div class="weather-temp">${high}°F</div>
+                <div class="weather-low">${low}°F</div>
+                <div class="weather-desc">${desc}</div>
+            `;
+            widget.appendChild(day);
+        });
+
+        // Timestamp so visitors know the data is live
+        const updated = document.createElement('p');
+        updated.className = 'weather-updated';
+        updated.textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+        widget.after(updated);
+    }
+
+    // Update the compact today snapshot on index.html
+    function renderCurrentWeather(data) {
+        const tempEl     = document.querySelector('.current-weather .temp');
+        const forecastEl = document.querySelector('.current-weather .forecast');
+        if (!tempEl || !forecastEl) return;
+
+        const { desc, icon } = decodeWeatherCode(data.daily.weather_code[0]);
+        const high = Math.round(data.daily.temperature_2m_max[0]);
+
+        tempEl.textContent     = `Current: ${high}°F`;
+        forecastEl.textContent = `${icon} ${desc}`;
+    }
+
+    // Fetch live data — gracefully fall back if the network is unavailable
+    fetch(API_URL)
+        .then(res => {
+            if (!res.ok) throw new Error(`API error: ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            renderForecastWidget(data);
+            renderCurrentWeather(data);
+        })
+        .catch(err => {
+            console.warn('Weather API unavailable — showing placeholder data.', err);
+            // Graceful fallback — widget stays readable even if API is down
+            const tempEl     = document.querySelector('.current-weather .temp');
+            const forecastEl = document.querySelector('.current-weather .forecast');
+            if (tempEl)     tempEl.textContent     = 'Current: 82°F';
+            if (forecastEl) forecastEl.textContent = '☀️ Sunny';
+        });
 }
 
 
@@ -1483,30 +1562,59 @@ function initCurrencyConverter() {
     const convertBtn   = converter.querySelector('.convert-btn');
     const resultDiv    = converter.querySelector('.conversion-result');
 
-    // Static exchange rates relative to USD.
-    // TND (Taniti Dollar) is fictional — feel free to set whatever rate makes sense.
-    const exchangeRates = {
+    // Exchange rates — fetched live from ExchangeRate-API (free, no key needed for USD base).
+    // TND (Taniti Dollar) is fictional — added at a fixed rate as a fun island touch.
+    // Falls back to sensible static rates if the API is unreachable.
+    let exchangeRates = {
         USD: 1,
-        EUR: 0.85,
-        GBP: 0.73,
-        JPY: 110.14,
-        AUD: 1.35,
-        CAD: 1.25,
-        TND: 2.5,
+        EUR: 0.92,
+        GBP: 0.79,
+        JPY: 149.50,
+        AUD: 1.53,
+        CAD: 1.36,
+        TND: 2.5,  // Fictional Taniti Dollar — fixed by island law 😄
     };
+
+    // Show a loading state while rates are being fetched
+    if (resultDiv) {
+        resultDiv.textContent = 'Loading live exchange rates...';
+        resultDiv.classList.remove('error');
+    }
+
+    // Fetch live rates from the free Open Exchange Rates compatible endpoint
+    // exchangerate-api.com offers 1,500 free requests/month — plenty for a portfolio site
+    fetch('https://open.er-api.com/v6/latest/USD')
+        .then(res => {
+            if (!res.ok) throw new Error(`API error: ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            if (data.result === 'success') {
+                // Merge live rates with our fictional TND rate
+                exchangeRates = { ...data.rates, TND: 2.5 };
+                if (resultDiv) resultDiv.textContent = 'Rates updated live ✓';
+                // Run an initial conversion so the widget shows a result immediately
+                convertCurrency();
+            }
+        })
+        .catch(err => {
+            console.warn('Currency API unavailable — using fallback rates.', err);
+            if (resultDiv) resultDiv.textContent = 'Using offline rates (API unavailable)';
+            convertCurrency();
+        });
 
     // All conversions go through USD as the common base to keep the math simple
     function convertCurrency() {
         const fromValue = parseFloat(fromInput.value);
 
-        if (isNaN(fromValue)) {
-            resultDiv.textContent = 'Please enter a valid amount';
-            resultDiv.classList.add('error');
+        if (isNaN(fromValue) || fromInput.value === '') {
+            resultDiv.textContent = 'Enter an amount to convert';
+            resultDiv.classList.remove('error');
             return;
         }
 
-        const inUSD     = fromValue / exchangeRates[fromCurrency.value];
-        const converted = inUSD * exchangeRates[toCurrency.value];
+        const inUSD     = fromValue / (exchangeRates[fromCurrency.value] || 1);
+        const converted = inUSD * (exchangeRates[toCurrency.value] || 1);
 
         toInput.value         = converted.toFixed(2);
         resultDiv.textContent = `${fromValue} ${fromCurrency.value} = ${converted.toFixed(2)} ${toCurrency.value}`;

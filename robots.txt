@@ -1,0 +1,15 @@
+# robots.txt — Taniti Island Tourism Website
+# Tells search engine crawlers which pages they can and cannot index.
+# Learn more: https://developers.google.com/search/docs/crawling-indexing/robots/intro
+
+# Allow all well-behaved crawlers to index the full site
+User-agent: *
+Allow: /
+
+# Block crawlers from indexing development/config files
+Disallow: /.github/
+Disallow: /wrangler.jsonc
+Disallow: /.hintrc
+
+# Location of the sitemap — helps search engines discover all pages
+Sitemap: https://taniti-island.mrabrahammacias.workers.dev/sitemap.xml

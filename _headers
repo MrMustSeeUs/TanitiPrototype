@@ -1,0 +1,41 @@
+# =============================================================================
+# _headers — Cloudflare Workers Security Headers
+# Applied to every response served from the site.
+# These headers protect visitors from common web attacks.
+# Reference: https://securityheaders.com
+# =============================================================================
+
+/*
+  # --- Content Security Policy ---
+  # Controls what resources the browser is allowed to load.
+  # Prevents XSS attacks by blocking inline scripts from unknown sources.
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.open-meteo.com https://open.er-api.com; frame-ancestors 'none';
+
+  # --- X-Frame-Options ---
+  # Prevents your site from being embedded in an iframe on another domain.
+  # Protects against clickjacking attacks.
+  X-Frame-Options: DENY
+
+  # --- X-Content-Type-Options ---
+  # Stops browsers from guessing the content type of a response.
+  # Prevents MIME-type sniffing attacks.
+  X-Content-Type-Options: nosniff
+
+  # --- Referrer Policy ---
+  # Controls how much referrer information is included with requests.
+  # strict-origin-when-cross-origin is the modern safe default.
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # --- Permissions Policy ---
+  # Disables browser features the site doesn't use.
+  # Prevents malicious scripts from accessing camera, mic, or location.
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+
+  # --- X-XSS-Protection ---
+  # Legacy header — enables XSS filter in older browsers.
+  # Modern browsers use CSP instead but this covers older ones.
+  X-XSS-Protection: 1; mode=block
+
+  # --- Cache Control for HTML ---
+  # HTML pages should always be fresh — no caching.
+  Cache-Control: no-cache
