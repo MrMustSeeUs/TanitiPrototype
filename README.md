@@ -21,7 +21,7 @@ CI/CD automation, and web security best practices.
 - **Gallery lightbox** — Full-screen image viewer with keyboard navigation (arrow keys + Escape)
 - **FAQ search** — Real-time search with keyword highlighting across all FAQ categories
 - **Currency converter** — Convert between USD, EUR, GBP, JPY, and the fictional Taniti Dollar
-- **Weather widget** — 5-day forecast display _(live Open-Meteo API integration — Sprint 3)_
+- **Weather widget** — live 5-day forecast via [Open-Meteo API](https://open-meteo.com) — free, no API key required
 - **Interactive map** — Clickable location pins with category filtering
 - **Countdown timer** — Live countdown to upcoming island events
 - **Mobile responsive** — Fully functional hamburger menu and fluid layouts on all screen sizes
@@ -38,7 +38,7 @@ CI/CD automation, and web security best practices.
 | Deployment | Cloudflare Workers with global CDN + automatic HTTPS |
 | CI/CD | GitHub Actions — auto-deploy on every push to `main` |
 | Security | CSP headers, GitHub Secrets, WCAG 2.1 AA, OWASP practices |
-| Monitoring | UptimeRobot, Sentry *(Sprint 4)* |
+| Monitoring | UptimeRobot uptime alerts *(Sprint 4)* |
 
 ---
 
@@ -99,10 +99,12 @@ TanitiPrototype/
 - [x] HTML validation, internal link checker, asset reference checker in pipeline
 - [x] Asset filename normalization — lowercase for Linux/Cloudflare compatibility
 
-### 📋 Sprint 3 — Live Data
-- [ ] Replace mock weather data with Open-Meteo API (free, no key required)
-- [ ] Replace hardcoded currency rates with ExchangeRate-API (free tier)
-- [ ] Add `robots.txt` and `sitemap.xml` for SEO
+### ✅ Sprint 3 — Live Data (Complete)
+- [x] Live weather data via Open-Meteo API — free, no API key, 5-day forecast
+- [x] Live currency rates via open.er-api.com — updates on every page load
+- [x] `robots.txt` — search engine crawl rules
+- [x] `sitemap.xml` — all 6 pages indexed for SEO
+- [x] Security headers — CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
 
 ### 📋 Sprint 4 — Monitoring & Polish
 - [ ] UptimeRobot uptime monitoring
@@ -118,7 +120,7 @@ This project follows OWASP best practices for front-end security:
 
 - No API keys or secrets stored in the codebase
 - User input is sanitized before DOM insertion
-- Security headers enforced at the CDN layer (Cloudflare) — _Sprint 3_
+- Security headers enforced at the CDN layer — CSP, X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy
 - Automated dependency vulnerability scanning via Dependabot — _coming Sprint 4_
 
 ---
