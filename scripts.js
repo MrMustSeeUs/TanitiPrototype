@@ -1326,7 +1326,7 @@ function initItineraryBuilder() {
 // The legend lets users filter pins by category (beach, dining, etc.).
 //
 // ⚠️  TODO: The map image path below currently points to a placeholder.
-// Update the src to "Assets/interactivemap.png" to use the actual map file,
+// Update the src to "Assets/interactivemap.jpg" to use the actual map file,
 // or swap the <img> approach for Leaflet.js to add full zoom/pan support.
 // =============================================================================
 function initMapInteraction() {
@@ -1343,7 +1343,7 @@ function initMapInteraction() {
     // Pin positions (top/left %) are relative to the map image dimensions.
     mapPlaceholder.innerHTML = `
         <div class="map-demo">
-            <img src="Assets/interactivemap.png" alt="Interactive map of Taniti Island showing beaches, dining, activities, shopping, accommodations, and attractions" class="map-image">
+            <img src="Assets/interactivemap.jpg" alt="Interactive map of Taniti Island showing beaches, dining, activities, shopping, accommodations, and attractions" class="map-image">
             <div class="map-overlay">
                 <div class="map-point" style="top: 30%; left: 40%;" data-type="beach"         title="Taniti Beach"></div>
                 <div class="map-point" style="top: 45%; left: 60%;" data-type="dining"        title="Seafood Restaurant"></div>
