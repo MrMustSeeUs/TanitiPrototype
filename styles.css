@@ -301,18 +301,20 @@ section {
 /* Bottom bar sits 7px below the middle bar */
 .menu-icon::after  { top: 7px; }
 
-/* When the nav is open (JS adds .open to the button), animate into an X:
-   middle bar disappears, top/bottom bars rotate to cross */
-.mobile-menu-toggle.open .menu-icon {
+/* When the nav is open (JS sets aria-expanded="true" on the button),
+   animate the three bars into an X.
+   We use aria-expanded because that's what scripts.js already sets —
+   no extra class needed, and it's semantically correct. */
+.mobile-menu-toggle[aria-expanded="true"] .menu-icon {
     background-color: transparent;         /* hide the middle bar */
 }
 
-.mobile-menu-toggle.open .menu-icon::before {
+.mobile-menu-toggle[aria-expanded="true"] .menu-icon::before {
     top: 0;
     transform: rotate(45deg);
 }
 
-.mobile-menu-toggle.open .menu-icon::after {
+.mobile-menu-toggle[aria-expanded="true"] .menu-icon::after {
     top: 0;
     transform: rotate(-45deg);
 }
