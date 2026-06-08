@@ -1366,7 +1366,9 @@ section {
     clip-path: ellipse(55% 100% at 50% 100%);
 }
 
-.search-container {
+/* Outer container — centers and constrains the search form */
+.search-container,
+.faq-search-container {
     max-width: 700px;
     margin: 0 auto;
     position: relative;
@@ -1380,38 +1382,93 @@ section {
     font-size: 1.1rem;
 }
 
-.search-input-group {
+/* The pill wrapper — both class names used across HTML */
+.search-input-group,
+.search-wrapper {
     display: flex;
+    align-items: stretch;        /* makes input and button the same height */
     border-radius: 50px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    height: 56px;                /* fixed height ensures perfect symmetry */
 }
 
-.search-input-group input {
+.search-input-group input,
+.search-wrapper input {
     flex: 1;
-    padding: 1rem 1.5rem;
+    padding: 0 1.5rem;           /* horizontal only — height controlled by parent */
     border: none;
     font-family: var(--font-body);
     font-size: 1rem;
     outline: none;
+    background: var(--input-bg);
+    color: var(--text-color);
 }
 
 .search-btn {
     background: var(--secondary-color);
     color: var(--dark-color);
-    padding: 0 2rem;
+    padding: 0 1.75rem;          /* horizontal padding only — height from parent */
     border: none;
+    border-radius: 0 50px 50px 0; /* rounds only the right side to complete the pill */
     cursor: pointer;
     font-weight: 700;
     font-family: var(--font-body);
     font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     transition: var(--transition);
     min-height: 44px;
-    min-width: 44px;
+    min-width: 56px;
+    flex-shrink: 0;
+}
+
+.search-btn svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
 }
 
 .search-btn:hover {
     background: var(--secondary-dark);
+}
+
+/* FAQ page banner — the teal hero at the top of faq.html */
+.page-banner {
+    background: var(--gradient-primary);
+    color: var(--light-text);
+    text-align: center;
+    padding: 4rem 0 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-banner h1 {
+    color: var(--light-text);
+    font-size: 2.4rem;
+    margin-bottom: 0.75rem;
+}
+
+.page-banner p {
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 1.1rem;
+    margin-bottom: 0;
+}
+
+/* Main FAQ content area — padding keeps search bar off the banner edge */
+.faq-page {
+    padding-top: 2.5rem;
+    padding-bottom: 4rem;
+}
+
+/* Search bar container — centered with comfortable vertical breathing room */
+.faq-search-container {
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    position: relative;
+    z-index: 1;
 }
 
 .popular-questions {
@@ -2136,7 +2193,8 @@ section {
     .form-group input,
     .form-group select,
     .form-group textarea,
-    .search-input-group input {
+    .search-input-group input,
+    .search-wrapper input {
         background-color: #333;
         color: var(--text-color);
         border-color: #444;
@@ -2810,7 +2868,8 @@ h6 {
 /* Ensure form inputs always show a visible focus state */
 .form-group input:focus-visible,
 .form-group select:focus-visible,
-.search-input-group input:focus-visible {
+.search-input-group input:focus-visible,
+.search-wrapper input:focus-visible {
     outline: 3px solid var(--secondary-color);
     outline-offset: 0;
     border-color: var(--primary-color);
