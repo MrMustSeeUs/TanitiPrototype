@@ -687,6 +687,7 @@ section {
     display: flex;
     gap: 0.75rem;
     align-items: baseline;
+    color: var(--text-color);
 }
 
 .event-list li:last-child {
@@ -815,6 +816,7 @@ section {
     margin-bottom: 0.5rem;
     padding-left: 1.5rem;
     position: relative;
+    color: var(--text-color);
 }
 
 .timeline li:before {
@@ -1255,12 +1257,14 @@ section {
 .dining-category h3,
 .shopping-category h3 {
     padding: 1rem 1rem 0.5rem;
+    color: var(--dark-color);
 }
 
 .dining-category p,
 .shopping-category p {
     padding: 0 1rem;
     margin-bottom: 1rem;
+    color: var(--text-color);
 }
 
 .dining-features {
@@ -1275,6 +1279,7 @@ section {
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
+    color: var(--text-color);
 }
 
 .store-list {
@@ -1285,6 +1290,7 @@ section {
     margin-bottom: 0.5rem;
     position: relative;
     padding-left: 1.5rem;
+    color: var(--text-color);
 }
 
 .store-list li:before {
@@ -1585,6 +1591,7 @@ section {
     display: none;
     padding: 0 1.5rem 1.5rem;
     border-top: 1px solid #f0f4f8;
+    color: var(--text-color);
 }
 
 .faq-answer ul {
@@ -1595,6 +1602,7 @@ section {
 
 .faq-answer ul li {
     margin-bottom: 0.5rem;
+    color: var(--text-color);
 }
 
 /* Contact Form */
@@ -2919,12 +2927,14 @@ section {
 .weather-date {
     font-weight: 600;
     margin-bottom: 0.5rem;
+    color: var(--dark-color);
 }
 
 .weather-temp {
     font-size: 1.5rem;
     font-weight: 700;
     margin: 0.5rem 0;
+    color: var(--dark-color);
 }
 
 .weather-desc {
