@@ -158,13 +158,13 @@ section {
 
 /* Alternating section warm/cool backgrounds */
 .discover, .geography, .taniti-city, .trip-planner,
-.transportation, .faq-categories {
+.transportation, .interactive-map, .shopping, .practical-info {
     background: var(--light-color);
 }
 
 .info-section, .essential-info, .island-overview,
 .culture-history, .merriton-landing, .accommodations,
-.travel-tips {
+.travel-tips, .dining, .activities {
     background: var(--warm-bg);
 }
 
@@ -616,16 +616,7 @@ section {
 }
 
 /* Responsive: collapses same as info-cards */
-@media (max-width: 1100px) {
-    .info-grid { grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 680px) {
-    .info-grid { grid-template-columns: repeat(2, 1fr); }
-    .info-grid--2 { grid-template-columns: 1fr; }
-}
-@media (max-width: 420px) {
-    .info-grid { grid-template-columns: 1fr; }
-}
+
 
 .events-box,
 .weather-box {
@@ -1084,27 +1075,7 @@ section {
 }
 
 /* Responsive — 3 cols on large tablet, 2 on small tablet, 1 on mobile */
-@media (max-width: 1024px) {
-    .transport-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
 
-@media (max-width: 700px) {
-    .transport-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 440px) {
-    .transport-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .transport-card img {
-        height: 160px;
-    }
-}
 
 .tips-content {
     background: var(--card-bg);
@@ -1797,6 +1768,10 @@ section {
 
 /* Mobile footer — stack vertically */
 @media (max-width: 680px) {
+    .info-grid { grid-template-columns: repeat(2, 1fr); }
+    .info-grid--2 { grid-template-columns: 1fr; }
+
+    /* Footer stacks vertically on small screens */
     .footer-top .container,
     .footer-bottom .container {
         flex-direction: column;
@@ -1812,29 +1787,11 @@ section {
         justify-content: center;
         flex-wrap: wrap;
     }
-}
 
-/* Testimonials */
-.testimonial-slider {
-    margin-top: 2rem;
-}
-
-
-.testimonial-content {
-    font-style: italic;
-    margin-bottom: 1.5rem;
-}
-
-.testimonial-author {
-    display: flex;
-    align-items: center;
-}
-
-.author-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 1rem;
+    /* Info grids — 2 cols on small screens */
+    .info-grid  { grid-template-columns: repeat(2, 1fr); }
+    .info-cards { grid-template-columns: repeat(2, 1fr); }
+    .info-grid--2 { grid-template-columns: 1fr; }
 }
 
 
@@ -1859,50 +1816,6 @@ section {
     }
 }
 
-@media (max-width: 768px) {
-    html { font-size: 15px; }
-
-    .hero {
-        padding: 6rem 0 5rem;
-    }
-
-    .hero h2 {
-        font-size: 2.2rem;
-    }
-
-    .hero p {
-        font-size: 1.1rem;
-    }
-
-    /* Show hamburger button on mobile — flex so .menu-icon centers inside */
-    .mobile-menu-toggle {
-        display: flex;
-    }
-
-    /* Mobile nav drops down below the header */
-    .nav-links {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--gradient-primary);
-        flex-direction: column;
-        align-items: center;
-        padding: 1.25rem 0;
-        box-shadow: 0 8px 24px rgba(13,126,131,0.25);
-        display: none;
-        gap: 0.25rem;
-    }
-
-    .nav-links.show {
-        display: flex;
-    }
-
-    .nav-links li {
-        margin: 0.25rem 0;
-    }
-
-}
 
 @media (max-width: 576px) {
     section {
@@ -1965,23 +1878,10 @@ section {
 
 /* Skip to main content link for keyboard users */
 /* Additional Tropical Styling */
-/* Palm leaf background pattern for certain sections */
-.info-section,
-.testimonials,
+/* FAQ categories section background */
 .faq-categories {
-    background-color: var(--card-bg);
-    background-image: url('images/palm-pattern.png');
-    background-size: 300px;
-    background-repeat: repeat;
-    background-attachment: fixed;
-    background-blend-mode: overlay;
+    background: var(--light-color);
 }
-
-/* Tropical accent borders */
-.feature-card,
-.info-card,
-.accommodation-card,
-/* Note: .faq-item border-top is already merged into the main .faq-item rule above. */
 
 .activity-card:nth-child(2n) {
     border-top: 4px solid var(--secondary-color);
@@ -1990,8 +1890,6 @@ section {
 .activity-card:nth-child(3n) {
     border-top: 4px solid var(--accent-color);
 }
-
-/* Wave divider between some sections */
 
 
 /* Tropical color indicators for different types of content */
@@ -2131,21 +2029,12 @@ section {
 
 /* Responsive breakpoints for 5-column info-cards grid */
 @media (max-width: 1100px) {
-    .info-cards {
-        grid-template-columns: repeat(3, 1fr);
-    }
+    .info-grid, .info-cards { grid-template-columns: repeat(3, 1fr); }
 }
 
-@media (max-width: 680px) {
-    .info-cards {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
 
 @media (max-width: 420px) {
-    .info-cards {
-        grid-template-columns: 1fr;
-    }
+    .info-grid, .info-cards { grid-template-columns: 1fr; }
 }
 
 /* Print Styles */
@@ -2214,11 +2103,15 @@ section {
     .info-card,
     .accommodation-card,
     .activity-card,
-    .faq-item,
-    .contact-form,
-    .contact-info,
-    .planner-tool,
     .transport-card,
+    .faq-item,
+    .events-box,
+    .weather-box,
+    .dining-category,
+    .shopping-category,
+    .feature-item,
+    .planner-tool,
+    .planner-day-card,
     .tips-content,
     .map-controls,
     .coming-soon {
@@ -2275,7 +2168,7 @@ section {
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--light-color); /* adapts to dark mode automatically */
 }
 
 ::-webkit-scrollbar-thumb {
@@ -2284,7 +2177,7 @@ section {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #0a6b70;
+    background: var(--primary-dark);
 }
 
 /* JavaScript Enhancements */
@@ -2860,21 +2753,7 @@ h6 {
 }
 
 /* Responsive — stack time and icon above details on very small screens */
-@media (max-width: 480px) {
-    .planner-activity-item {
-        flex-wrap: wrap;
-    }
 
-    .planner-activity-time {
-        min-width: 100%;
-        font-size: 0.85rem;
-    }
-
-    .planner-day-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
 
 /* =============================================================================
    ACCESSIBILITY & PERFORMANCE — COMPREHENSIVE PASS
@@ -3018,10 +2897,10 @@ h6 {
 /* Large tablet — 1024px */
 @media (max-width: 1024px) {
     /* Hero headings scale down gracefully */
-    .hero h2       { font-size: 2.8rem; }
-    .page-hero h2  { font-size: 2.2rem; }
+    .hero h2      { font-size: 2.8rem; }
+    .page-hero h2 { font-size: 2.2rem; }
 
-    /* Dining grid drops to 2 cols on medium screens */
+    /* Dining and shopping drop to 2 cols on medium screens */
     .dining-grid,
     .shopping-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -3031,10 +2910,57 @@ h6 {
     .activity-grid {
         grid-template-columns: repeat(3, 1fr);
     }
+
+    /* Transport grid — 3 cols on large tablet */
+    .transport-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 /* Tablet — 768px */
 @media (max-width: 768px) {
+    html { font-size: 15px; }
+
+    .hero {
+        padding: 6rem 0 5rem;
+    }
+
+    .hero h2 {
+        font-size: 2.2rem;
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+    }
+
+    /* Show hamburger button on mobile — flex so .menu-icon centers inside */
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    /* Mobile nav drops down below the header */
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--gradient-primary);
+        flex-direction: column;
+        align-items: center;
+        padding: 1.25rem 0;
+        box-shadow: 0 8px 24px rgba(13,126,131,0.25);
+        display: none;
+        gap: 0.25rem;
+    }
+
+    .nav-links.show {
+        display: flex;
+    }
+
+    .nav-links li {
+        margin: 0.25rem 0;
+    }
+
     /* Map section stacks — map on top, controls below */
     .map-container {
         grid-template-columns: 1fr;
@@ -3078,6 +3004,11 @@ h6 {
         grid-template-columns: 1fr;
     }
 
+    /* Transport grid — 2 cols on tablet */
+    .transport-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     /* Currency converter — stack on mobile */
     .converter-form {
         grid-template-columns: 1fr;
@@ -3115,7 +3046,8 @@ h6 {
     .activity-grid,
     .feature-grid,
     .info-cards,
-    .accommodation-grid {
+    .accommodation-grid,
+    .transport-grid {
         grid-template-columns: 1fr;
     }
 
@@ -3155,9 +3087,9 @@ h6 {
         padding: 1.5rem;
     }
 
-    /* Transport cards — ensure readable on tiny screens */
+    /* Transport cards */
     .transport-card img {
-        height: 140px;
+        height: 160px;
     }
 
     /* Coming soon hero — smaller emoji */
@@ -3178,6 +3110,22 @@ h6 {
     .planner-activity-item {
         gap: 0.6rem;
     }
+
+
+    /* Planner activity layout on tiny screens */
+    .planner-activity-item {
+            flex-wrap: wrap;
+        }
+    
+        .planner-activity-time {
+            min-width: 100%;
+            font-size: 0.85rem;
+        }
+    
+        .planner-day-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
 }
 
 /* Very small — 360px (small Android phones) */
