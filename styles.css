@@ -891,9 +891,10 @@ section {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 700;
-    font-size: 0.92rem;
-    color: var(--text-color);          /* Was --dark-color (#1a2e35), softened to --text-color (#2d3748) */
+    font-size: 0.95rem;
+    color: var(--text-color);
     letter-spacing: 0.02em;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 /* Inputs and selects — clean with teal focus ring */
@@ -920,30 +921,43 @@ section {
 .checkbox-group {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 0.5rem;
+    gap: 0.6rem;
 }
 
 .checkbox-group label {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
     font-weight: 600;
     font-size: 0.93rem;
-    color: var(--primary-dark);       /* Teal — readable, warm, visually lighter than near-black */
+    color: var(--text-color);
     cursor: pointer;
-    gap: 0.4rem;
-    padding: 0.3rem 0.5rem;
+    padding: 0.5rem 0.75rem;
     border-radius: var(--border-radius);
-    transition: background 0.15s ease, color 0.15s ease;
+    border: 1.5px solid rgba(13, 126, 131, 0.35);
+    background: rgba(13, 126, 131, 0.06);
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
 }
 
 .checkbox-group label:hover {
-    background: rgba(13, 126, 131, 0.08);
-    color: var(--primary-color);
+    background: rgba(13, 126, 131, 0.14);
+    border-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+.checkbox-group input[type="checkbox"]:checked + * ,
+.checkbox-group label:has(input:checked) {
+    background: rgba(13, 126, 131, 0.18);
+    border-color: var(--primary-color);
 }
 
 .checkbox-group input[type="checkbox"] {
-    accent-color: var(--primary-color);  /* Tints the checkbox tick itself */
-}
+    accent-color: var(--primary-color);
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}}
 
 .planner-results {
     margin-top: 2rem;
@@ -2567,6 +2581,18 @@ section {
         background-color: #333;
         color: var(--text-color);
         border-color: #444;
+    }
+
+    /* Checkbox labels on dark card — border needs to be visible against dark bg */
+    .checkbox-group label {
+        border-color: rgba(253, 248, 238, 0.25);
+        background: rgba(253, 248, 238, 0.07);
+        color: var(--text-color);
+    }
+
+    .checkbox-group label:hover {
+        border-color: rgba(253, 248, 238, 0.5);
+        background: rgba(253, 248, 238, 0.13);
     }
 
     .info-section,
