@@ -17,9 +17,12 @@
     --accent-color:     #e64c3c;   /* Tropical flower red — alerts + badges      */
     --dark-color:       #1a2e35;   /* Deep ocean — footer + dark sections        */
     --light-color:      #f7f9fb;   /* Cool sand — page background                */
-    --warm-bg:          #fef3dc;   /* Warm cream — alternating section bg (was #fffdf7, too close to white) */
+    --warm-bg:          #fef3dc;   /* Warm cream — alternating section bg        */
+    --card-bg:          #fdf8ee;   /* Card surface on light sections — warm gold tint  */
+    --card-bg-warm:     #fef9f0;   /* Card surface on warm-bg sections — lighter tint  */
+    --input-bg:         #fffdf7;   /* Form inputs — near-white, slightly warm         */
     --text-color:       #2d3748;   /* Dark slate — primary body text             */
-    --text-muted:       #4a5568;   /* Muted slate — captions + secondary text (darkened for WCAG AA contrast on white) */
+    --text-muted:       #4a5568;   /* Muted slate — captions + secondary text    */
     --light-text:       #ffffff;   /* Pure white — text on dark backgrounds      */
     --success-color:    #27ae60;   /* Tropical foliage                           */
     --warning-color:    #f39c12;   /* Sunset orange                              */
@@ -248,7 +251,7 @@ section {
    Now solid white pill with full-opacity teal icon — visible on any bg. */
 .mobile-menu-toggle {
     display: none;
-    background: #ffffff;
+    background: var(--card-bg);
     border: 2px solid var(--primary-color);
     color: var(--primary-color);
     font-size: 1.4rem;
@@ -507,7 +510,7 @@ section {
 }
 
 .feature-card {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow);
@@ -653,7 +656,7 @@ section {
 
 .events-box,
 .weather-box {
-    background: #fff;
+    background: var(--card-bg);
     padding: 2.2rem;
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow);
@@ -739,7 +742,7 @@ section {
 }
 
 .info-card {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow);
@@ -851,7 +854,7 @@ section {
 
 /* Plan Page */
 .planner-tool {
-    background: #fff;
+    background: var(--card-bg);
     padding: 2.5rem;
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-md);
@@ -903,7 +906,7 @@ section {
     font-family: var(--font-body);
     font-size: 0.95rem;
     color: var(--text-color);
-    background: #fff;
+    background: var(--input-bg);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     outline: none;
 }
@@ -947,7 +950,7 @@ section {
 }
 
 .accommodation-card {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow);
@@ -1014,7 +1017,7 @@ section {
 }
 
 .transport-card {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow);
     border-top: 4px solid var(--secondary-color);
@@ -1107,7 +1110,7 @@ section {
 }
 
 .tips-content {
-    background: #fff;
+    background: var(--card-bg);
     padding: 2.5rem;
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow);
@@ -1167,7 +1170,7 @@ section {
 }
 
 .map-controls {
-    background-color: #fff;
+    background-color: var(--card-bg);
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -1241,7 +1244,7 @@ section {
 
 .dining-category,
 .shopping-category {
-    background-color: #fff;
+    background-color: var(--card-bg);
     border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: var(--shadow);
@@ -1275,7 +1278,7 @@ section {
 }
 
 .feature-item {
-    background-color: #fff;
+    background-color: var(--card-bg);
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -1301,7 +1304,7 @@ section {
 }
 
 .shopping-note {
-    background-color: #fff;
+    background-color: var(--card-bg);
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -1320,7 +1323,7 @@ section {
 
 /* Activity cards — lift on hover and fade in on scroll via IntersectionObserver */
 .activity-card {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow);
@@ -1358,7 +1361,7 @@ section {
 }
 
 .coming-soon {
-    background-color: #fff;
+    background-color: var(--card-bg);
     padding: 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -1504,7 +1507,7 @@ section {
 
 .tab-btn {
     padding: 0.7rem 1.4rem;
-    background: #fff;
+    background: var(--card-bg);
     border: 2px solid #e2e8f0;
     border-radius: 50px;
     cursor: pointer;
@@ -1539,7 +1542,7 @@ section {
 /* Each FAQ question card — tropical teal top border adds visual brand accent */
 /* Each FAQ question card — tropical teal top border adds visual brand accent */
 .faq-item {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow);
     margin-bottom: 1rem;
@@ -1607,7 +1610,7 @@ section {
 
 /* Contact Form */
 .contact-form {
-    background-color: #fff;
+    background-color: var(--card-bg);
     padding: 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -1638,7 +1641,7 @@ section {
 }
 
 .contact-info {
-    background-color: #fff;
+    background-color: var(--card-bg);
     padding: 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -1849,7 +1852,7 @@ section {
 }
 
 .testimonial {
-    background-color: #fff;
+    background-color: var(--card-bg);
     padding: 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -2055,7 +2058,7 @@ section {
 .info-section,
 .testimonials,
 .faq-categories {
-    background-color: #f0f4f8;
+    background-color: var(--card-bg);
     background-image: url('images/palm-pattern.png');
     background-size: 300px;
     background-repeat: repeat;
@@ -2177,7 +2180,7 @@ section {
 
 /* Itinerary Builder */
 .itinerary-builder {
-    background-color: #fff;
+    background-color: var(--card-bg);
     padding: 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -2194,7 +2197,7 @@ section {
     min-width: 100px;
     padding: 0.5rem 1rem;
     margin-right: 0.5rem;
-    background-color: #f0f4f8;
+    background-color: var(--card-bg);
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
@@ -2214,7 +2217,7 @@ section {
 }
 
 .activity-option {
-    background-color: #f0f4f8;
+    background-color: var(--card-bg);
     padding: 1rem;
     border-radius: var(--border-radius);
     cursor: pointer;
@@ -2231,7 +2234,7 @@ section {
 }
 
 .itinerary-preview {
-    background-color: #f0f4f8;
+    background-color: var(--card-bg);
     padding: 1.5rem;
     border-radius: var(--border-radius);
 }
@@ -2251,7 +2254,7 @@ section {
     align-items: center;
     margin-bottom: 0.5rem;
     padding: 0.5rem;
-    background-color: #fff;
+    background-color: var(--card-bg);
     border-radius: var(--border-radius);
 }
 
@@ -2276,7 +2279,7 @@ section {
 
 /* Reviews Section */
 .reviews-section {
-    background-color: #fff;
+    background-color: var(--card-bg);
 }
 
 .review-filters {
@@ -2288,7 +2291,7 @@ section {
 
 .filter-btn {
     padding: 0.5rem 1rem;
-    background-color: #f0f4f8;
+    background-color: var(--card-bg);
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
@@ -2301,7 +2304,7 @@ section {
 }
 
 .review-card {
-    background-color: #f9f9f9;
+    background-color: var(--card-bg);
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -2464,7 +2467,7 @@ section {
         font-size: 12pt;
         line-height: 1.5;
         color: #000;
-        background: #fff;
+        background: var(--card-bg);
     }
 
     a {
@@ -2502,8 +2505,13 @@ section {
 /* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
     :root {
-        --light-color: #1a1a1a;
-        --text-color: #f0f0f0;
+        --light-color:   #1a1a1a;
+        --warm-bg:       #1f1a10;
+        --card-bg:       #2c2c2c;
+        --card-bg-warm:  #2c2c2c;
+        --input-bg:      #333333;
+        --text-color:    #f0f0f0;
+        --text-muted:    #c0bdb5;
     }
 
     body {
@@ -2523,7 +2531,7 @@ section {
     .tips-content,
     .map-controls,
     .coming-soon {
-        background-color: #2c2c2c;
+        background-color: var(--card-bg);
         color: var(--text-color);
     }
 
@@ -2537,7 +2545,7 @@ section {
     }
 
     .tab-btn {
-        background-color: #2c2c2c;
+        background-color: var(--card-bg);
         color: var(--text-color);
     }
 
@@ -2917,7 +2925,7 @@ section {
 .weather-day {
     flex: 1;
     min-width: 100px;
-    background-color: #fff;
+    background-color: var(--card-bg);
     border-radius: var(--border-radius);
     padding: 1rem;
     text-align: center;
@@ -2944,7 +2952,7 @@ section {
 
 /* Currency converter widget */
 .currency-converter {
-    background-color: #fff;
+    background-color: var(--card-bg);
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
@@ -3004,7 +3012,7 @@ section {
     position: absolute;
     top: 100%;
     right: 0;
-    background-color: #fff;
+    background-color: var(--card-bg);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     min-width: 150px;
@@ -3023,7 +3031,7 @@ section {
 }
 
 .language-option:hover {
-    background-color: #f0f4f8;
+    background-color: var(--card-bg);
 }
 
 /* Countdown timer for special events */
@@ -3129,7 +3137,7 @@ h6 {
 
 /* Individual day card */
 .planner-day-card {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     overflow: hidden;
@@ -3399,7 +3407,7 @@ h6 {
     border-top: 4px solid var(--primary-color);
     border-radius: var(--border-radius-lg);
     padding: 1.8rem;
-    background: #fff;
+    background: var(--card-bg);
     box-shadow: var(--shadow);
     transition: var(--transition);
 }
@@ -3432,7 +3440,7 @@ h6 {
 
 /* Coming soon card in activities */
 .coming-soon {
-    background: #fff;
+    background: var(--card-bg);
     border: 1px solid rgba(249,168,38,0.3);
     border-top: 4px solid var(--secondary-color);
     border-radius: var(--border-radius-lg);
