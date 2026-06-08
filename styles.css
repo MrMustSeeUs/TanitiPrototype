@@ -17,7 +17,7 @@
     --accent-color:     #e64c3c;   /* Tropical flower red — alerts + badges      */
     --dark-color:       #1a2e35;   /* Deep ocean — footer + dark sections        */
     --light-color:      #f7f9fb;   /* Cool sand — page background                */
-    --warm-bg:          #fffdf7;   /* Warm cream — alternating section bg        */
+    --warm-bg:          #fef3dc;   /* Warm cream — alternating section bg (was #fffdf7, too close to white) */
     --text-color:       #2d3748;   /* Dark slate — primary body text             */
     --text-muted:       #4a5568;   /* Muted slate — captions + secondary text (darkened for WCAG AA contrast on white) */
     --light-text:       #ffffff;   /* Pure white — text on dark backgrounds      */
