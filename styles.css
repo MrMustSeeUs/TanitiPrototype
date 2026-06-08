@@ -892,7 +892,7 @@ section {
     margin-bottom: 0.5rem;
     font-weight: 700;
     font-size: 0.92rem;
-    color: var(--dark-color);
+    color: var(--text-color);          /* Was --dark-color (#1a2e35), softened to --text-color (#2d3748) */
     letter-spacing: 0.02em;
 }
 
@@ -926,12 +926,23 @@ section {
 .checkbox-group label {
     display: flex;
     align-items: center;
-    font-weight: normal;
+    font-weight: 600;
+    font-size: 0.93rem;
+    color: var(--primary-dark);       /* Teal — readable, warm, visually lighter than near-black */
+    cursor: pointer;
+    gap: 0.4rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: var(--border-radius);
+    transition: background 0.15s ease, color 0.15s ease;
 }
 
-.checkbox-group input {
-    margin-right: 0.5rem;
-    width: auto;
+.checkbox-group label:hover {
+    background: rgba(13, 126, 131, 0.08);
+    color: var(--primary-color);
+}
+
+.checkbox-group input[type="checkbox"] {
+    accent-color: var(--primary-color);  /* Tints the checkbox tick itself */
 }
 
 .planner-results {
