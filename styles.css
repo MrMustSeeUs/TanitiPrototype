@@ -1590,7 +1590,7 @@ section {
     position: relative;
     margin-bottom: 0;
     font-size: 1.05rem;
-    color: var(--dark-color);
+    color: var(--text-color);
     transition: color 0.2s ease;
 }
 
@@ -2537,6 +2537,7 @@ section {
         --input-bg:      #333333;
         --text-color:    #f0f0f0;
         --text-muted:    #c0bdb5;
+        --dark-color:    #f0f0f0;   /* Flips near-black to near-white so elements using this token stay readable */
     }
 
     body {
