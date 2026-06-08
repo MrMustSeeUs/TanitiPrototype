@@ -150,7 +150,7 @@ section {
 .section-intro {
     text-align: center;
     max-width: 700px;
-    margin: -1rem auto 2.5rem;
+    margin: 0 auto 2.5rem;
     color: var(--text-muted);
     font-size: 1.05rem;
     line-height: 1.7;
@@ -504,11 +504,6 @@ section {
     margin-top: 2rem;
 }
 
-/* 6-card grid (index.html) — all 6 fill 2 rows of 3 perfectly */
-.feature-grid.grid-6 {
-    grid-template-columns: repeat(3, 1fr);
-}
-
 .feature-card {
     background: var(--card-bg);
     border-radius: var(--border-radius-lg);
@@ -548,7 +543,7 @@ section {
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding: 1.1rem 1.2rem 1.2rem;
+    padding: 1.25rem;
 }
 
 .feature-card h3 {
@@ -594,38 +589,16 @@ section {
 
 /* Responsive — collapse feature grid */
 @media (max-width: 900px) {
-    .feature-grid,
-    .feature-grid.grid-6 {
+    .feature-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 560px) {
-    .feature-grid,
-    .feature-grid.grid-6 {
+    .feature-grid {
         grid-template-columns: 1fr;
     }
 }
-    color: var(--primary-color);
-    font-weight: 700;
-    font-size: 0.9rem;
-    letter-spacing: 0.02em;
-    transition: var(--transition);
-}
-
-.read-more::after {
-    content: '→';
-    transition: transform 0.2s ease;
-}
-
-.read-more:hover {
-    color: var(--secondary-color);
-}
-
-.read-more:hover::after {
-    transform: translateX(4px);
-}
-
 /* Info Section */
 .info-grid {
     display: grid;
@@ -657,7 +630,7 @@ section {
 .events-box,
 .weather-box {
     background: var(--card-bg);
-    padding: 2.2rem;
+    padding: 2rem;
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow);
     border-top: 4px solid var(--primary-color);
@@ -674,13 +647,13 @@ section {
 .weather-box h2 {
     font-size: 1.4rem;
     text-align: left;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.25rem;
     color: var(--primary-color);
 }
 
 .events-box h2::after,
 .weather-box h2::after {
-    margin: 0.5rem 0 0;
+    margin: 0.75rem 0 0;
 }
 
 .event-list li {
@@ -769,20 +742,20 @@ section {
 }
 
 .info-card h3 {
-    padding: 1rem 1.2rem 0.4rem;
+    padding: 1.25rem 1.25rem 0.4rem;
     color: var(--primary-color);
     font-size: 1.1rem;
 }
 
 .info-card p {
-    padding: 0 1.2rem;
+    padding: 0 1.25rem;
     margin-bottom: 0.5rem;
     font-size: 0.93rem;
     color: var(--text-muted);
 }
 
 .info-card .read-more {
-    padding: 0.5rem 1.2rem 1.2rem;
+    padding: 0.5rem 1.25rem 1.25rem;
 }
 
 /* About Page */
@@ -957,7 +930,7 @@ section {
     width: 1rem;
     height: 1rem;
     flex-shrink: 0;
-}}
+}
 
 .planner-results {
     margin-top: 2rem;
@@ -990,7 +963,7 @@ section {
 
 .accommodation-card img {
     width: 100%;
-    height: 180px;
+    height: 200px;
     object-fit: cover;
     border-radius: 0;
     transition: transform 0.4s ease;
@@ -1001,19 +974,19 @@ section {
 }
 
 .accommodation-card h3 {
-    padding: 1rem 1.2rem 0.4rem;
+    padding: 1.25rem 1.25rem 0.4rem;
     color: var(--primary-color);
     font-size: 1.1rem;
 }
 
 .accommodation-card p {
-    padding: 0 1.2rem 0.5rem;
+    padding: 0 1.25rem 0.5rem;
     font-size: 0.93rem;
     color: var(--text-muted);
 }
 
 .accommodation-card .read-more {
-    padding: 0.5rem 1.2rem 1.2rem;
+    padding: 0.5rem 1.25rem 1.25rem;
 }
 
 .booking-cta {
@@ -1076,7 +1049,7 @@ section {
 }
 
 .transport-card-body {
-    padding: 1rem 1.1rem 1.2rem;
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -1131,7 +1104,6 @@ section {
     .transport-card img {
         height: 160px;
     }
-}
 }
 
 .tips-content {
@@ -1302,14 +1274,6 @@ section {
     margin-top: 2rem;
 }
 
-.feature-item {
-    background-color: var(--card-bg);
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    color: var(--text-color);
-}
-
 .store-list {
     padding: 0 1rem 1rem;
 }
@@ -1326,14 +1290,6 @@ section {
     color: var(--primary-color);
     position: absolute;
     left: 0;
-}
-
-.shopping-note {
-    background-color: var(--card-bg);
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    margin-top: 2rem;
 }
 
 .activity-category {
@@ -1364,7 +1320,7 @@ section {
 
 .activity-card img {
     width: 100%;
-    height: 180px;
+    height: 200px;
     object-fit: cover;
     border-radius: 0;
     transition: transform 0.4s ease;
@@ -1375,22 +1331,15 @@ section {
 }
 
 .activity-card h4 {
-    padding: 1rem 1.2rem 0.4rem;
+    padding: 1.25rem 1.25rem 0.4rem;
     color: var(--primary-color);
+    font-size: 1.1rem;
 }
 
 .activity-card p {
-    padding: 0 1.2rem 1.2rem;
+    padding: 0 1.25rem 1.25rem;
     font-size: 0.93rem;
     color: var(--text-muted);
-}
-
-.coming-soon {
-    background-color: var(--card-bg);
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    margin-top: 2rem;
 }
 
 .soon-content {
@@ -1486,6 +1435,8 @@ section {
     font-family: var(--font-body);
     font-size: 0.95rem;
     transition: var(--transition);
+    min-height: 44px;
+    min-width: 44px;
 }
 
 .search-btn:hover {
@@ -1574,6 +1525,9 @@ section {
     overflow: hidden;
     border-top: 4px solid var(--primary-color);
     transition: var(--transition);
+    border-left: 1px solid rgba(13, 126, 131, 0.1);
+    border-right: 1px solid rgba(13, 126, 131, 0.1);
+    border-bottom: 1px solid rgba(13, 126, 131, 0.1);
 }
 
 .faq-item:hover {
@@ -1634,12 +1588,7 @@ section {
 }
 
 /* Contact Form */
-.contact-form {
-    background-color: var(--card-bg);
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-}
+
 
 .form-row {
     margin-bottom: 1.5rem;
@@ -1665,12 +1614,6 @@ section {
     min-height: 150px;
 }
 
-.contact-info {
-    background-color: var(--card-bg);
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-}
 
 .contact-method {
     margin-bottom: 1.5rem;
@@ -1876,13 +1819,6 @@ section {
     margin-top: 2rem;
 }
 
-.testimonial {
-    background-color: var(--card-bg);
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    margin: 0 1rem;
-}
 
 .testimonial-content {
     font-style: italic;
@@ -1901,41 +1837,9 @@ section {
     margin-right: 1rem;
 }
 
-.author-info h4 {
-    margin-bottom: 0.2rem;
-}
-
-.author-info p {
-    margin-bottom: 0;
-    font-size: 0.9rem;
-    color: #4a5568; /* darkened for WCAG contrast */
-}
 
 /* Newsletter */
-.newsletter {
-    background-color: var(--primary-color);
-    color: var(--light-text);
-    padding: 4rem 0;
-    text-align: center;
-}
 
-.newsletter h2:after {
-    background: var(--light-text);
-}
-
-.newsletter-form {
-    max-width: 600px;
-    margin: 0 auto;
-    display: flex;
-    gap: 0.5rem;
-}
-
-.newsletter-form input {
-    flex: 1;
-    padding: 0.8rem;
-    border: none;
-    border-radius: var(--border-radius);
-}
 
 /* Responsive Design */
 @media (max-width: 992px) {
@@ -1984,7 +1888,7 @@ section {
         background: var(--gradient-primary);
         flex-direction: column;
         align-items: center;
-        padding: 1.2rem 0;
+        padding: 1.25rem 0;
         box-shadow: 0 8px 24px rgba(13,126,131,0.25);
         display: none;
         gap: 0.25rem;
@@ -1998,9 +1902,6 @@ section {
         margin: 0.25rem 0;
     }
 
-    .newsletter-form {
-        flex-direction: column;
-    }
 }
 
 @media (max-width: 576px) {
@@ -2063,21 +1964,6 @@ section {
 }
 
 /* Skip to main content link for keyboard users */
-.skip-link {
-    position: absolute;
-    top: -40px;
-    left: 0;
-    background: var(--secondary-color);
-    color: var(--dark-color);
-    padding: 8px;
-    z-index: 1001;
-    transition: top 0.3s;
-}
-
-.skip-link:focus {
-    top: 0;
-}
-
 /* Additional Tropical Styling */
 /* Palm leaf background pattern for certain sections */
 .info-section,
@@ -2106,13 +1992,7 @@ section {
 }
 
 /* Wave divider between some sections */
-.wave-divider {
-    height: 50px;
-    background-image: url('images/wave-divider.svg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    margin-top: -1px;
-}
+
 
 /* Tropical color indicators for different types of content */
 .nature-tag {
@@ -2163,18 +2043,7 @@ section {
 }
 
 /* Photo Gallery */
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1rem;
-}
 
-.gallery-item {
-    position: relative;
-    overflow: hidden;
-    border-radius: var(--border-radius);
-    height: 200px;
-}
 
 .gallery-item img {
     width: 100%;
@@ -2183,111 +2052,11 @@ section {
     transition: transform 0.3s ease;
 }
 
-.gallery-item:hover img {
-    transform: scale(1.05);
-}
 
-.gallery-caption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 0.5rem;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-}
-
-.gallery-item:hover .gallery-caption {
-    transform: translateY(0);
-}
+.gallery-item:hover 
 
 /* Itinerary Builder */
-.itinerary-builder {
-    background-color: var(--card-bg);
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-}
 
-.day-selector {
-    display: flex;
-    overflow-x: auto;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-}
-
-.day-btn {
-    min-width: 100px;
-    padding: 0.5rem 1rem;
-    margin-right: 0.5rem;
-    background-color: var(--card-bg);
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.day-btn.active {
-    background-color: var(--primary-color);
-    color: var(--light-text);
-}
-
-.activity-selector {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.activity-option {
-    background-color: var(--card-bg);
-    padding: 1rem;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.activity-option:hover {
-    background-color: #e0e7ee;
-}
-
-.activity-option.selected {
-    background-color: var(--primary-color);
-    color: var(--light-text);
-}
-
-.itinerary-preview {
-    background-color: var(--card-bg);
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-}
-
-.itinerary-day {
-    margin-bottom: 1.5rem;
-}
-
-.itinerary-day h4 {
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.itinerary-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    padding: 0.5rem;
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-}
-
-.itinerary-time {
-    min-width: 80px;
-    font-weight: 600;
-    color: var(--primary-color);
-}
 
 .remove-activity {
     margin-left: auto;
@@ -2295,90 +2064,13 @@ section {
     border: none;
     color: var(--accent-color);
     cursor: pointer;
+    min-width: 32px;
+    min-height: 32px;
 }
 
-.save-itinerary {
-    margin-top: 1.5rem;
-    text-align: center;
-}
 
 /* Reviews Section */
-.reviews-section {
-    background-color: var(--card-bg);
-}
 
-.review-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.filter-btn {
-    padding: 0.5rem 1rem;
-    background-color: var(--card-bg);
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.filter-btn.active {
-    background-color: var(--primary-color);
-    color: var(--light-text);
-}
-
-.review-card {
-    background-color: var(--card-bg);
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    margin-bottom: 1.5rem;
-}
-
-.review-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.reviewer-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 1rem;
-}
-
-.reviewer-info h4 {
-    margin-bottom: 0.2rem;
-}
-
-.review-date {
-    font-size: 0.9rem;
-    color: #4a5568; /* darkened for WCAG contrast */
-}
-
-.review-rating {
-    margin-left: auto;
-    color: var(--secondary-color);
-}
-
-.review-content {
-    margin-bottom: 1rem;
-}
-
-.review-photos {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1rem;
-}
-
-.review-photo {
-    width: 80px;
-    height: 80px;
-    border-radius: var(--border-radius);
-    object-fit: cover;
-}
 
 /* Interactive Elements */
 .tooltip {
@@ -2411,28 +2103,7 @@ section {
 }
 
 /* Notification Banner */
-.notification-banner {
-    background-color: var(--warning-color);
-    color: var(--dark-color);
-    text-align: center;
-    padding: 0.8rem;
-    position: relative;
-}
 
-.notification-banner p {
-    margin: 0;
-}
-
-.close-notification {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-}
 
 /* Loading Indicator */
 .loading {
@@ -2484,9 +2155,7 @@ section {
     .site-footer,
     .faq-search,
     .category-tabs,
-    .newsletter {
-        display: none;
-    }
+    
 
     body {
         font-size: 12pt;
@@ -2507,10 +2176,6 @@ section {
 
     .faq-section {
         display: block !important;
-    }
-
-    .faq-item {
-        break-inside: avoid;
     }
 
     .faq-answer {
@@ -2857,77 +2522,17 @@ section {
 
 /* Additional Tropical Elements */
 /* Animated wave effect for hero sections */
-.wave-animation {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100px;
-    background: url('images/wave.svg');
-    background-size: 1000px 100px;
-    animation: wave 10s linear infinite;
-    z-index: 1;
-}
 
-.wave-animation.wave-1 {
-    opacity: 0.5;
-    animation-delay: 0s;
-    animation-duration: 10s;
-}
-
-.wave-animation.wave-2 {
-    opacity: 0.3;
-    animation-delay: -5s;
-    animation-duration: 15s;
-}
-
-@keyframes wave {
-    0% {
-        background-position-x: 0;
-    }
 
     100% {
         background-position-x: 1000px;
     }
-}
 
 /* Tropical gradient backgrounds */
-.tropical-gradient {
-    background: linear-gradient(135deg, var(--primary-color), #10a5ab, #12c2c9);
-    color: var(--light-text);
-}
 
-.sunset-gradient {
-    background: linear-gradient(135deg, #ff7e5f, #feb47b);
-    color: var(--light-text);
-}
 
 /* Decorative elements */
-.palm-decoration {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 150px;
-    height: 200px;
-    background: url('images/palm-decoration.svg') no-repeat;
-    background-size: contain;
-    opacity: 0.2;
-    z-index: 0;
-    pointer-events: none;
-}
 
-.shell-decoration {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 80px;
-    height: 80px;
-    background: url('images/shell-decoration.svg') no-repeat;
-    background-size: contain;
-    opacity: 0.2;
-    z-index: 0;
-    pointer-events: none;
-}
 
 /* Highlight box for special offers */
 .special-offer {
@@ -3026,51 +2631,10 @@ section {
 }
 
 /* Language selector */
-.language-selector {
-    position: relative;
-    margin-left: 1.5rem;
-}
 
-.language-btn {
-    background: none;
-    border: none;
-    color: var(--light-text);
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
 
-.language-btn:after {
-    content: '▼';
-    font-size: 0.7rem;
-    margin-left: 0.5rem;
-}
+.language-selector:hover 
 
-.language-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    min-width: 150px;
-    display: none;
-    z-index: 1000;
-}
-
-.language-selector:hover .language-dropdown {
-    display: block;
-}
-
-.language-option {
-    padding: 0.8rem 1rem;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.language-option:hover {
-    background-color: var(--card-bg);
-}
 
 /* Countdown timer for special events */
 .countdown-timer {
@@ -3391,52 +2955,6 @@ h6 {
         animation: none !important;
     }
 
-    .wave-animation {
-        animation: none !important;
-    }
-}
-
-/* --- Improved Text Muted Contrast ---
-   Bumped from #64748b (4.6:1) to #4a5568 (7.0:1) — passes WCAG AA + AAA */
-:root {
-    --text-muted: #4a5568;
-}
-
-/* --- Card border-left accent for extra contrast on white backgrounds ---
-   Thin left border on cards helps delineate card boundaries on white sections
-   where the shadow alone may not be visible for low-vision users. */
-.feature-card,
-.info-card,
-.accommodation-card,
-.dining-category,
-.shopping-category {
-    border-left: 1px solid rgba(13, 126, 131, 0.12);
-    border-right: 1px solid rgba(13, 126, 131, 0.12);
-    border-bottom: 1px solid rgba(13, 126, 131, 0.12);
-}
-
-.transport-card,
-.activity-card,
-.faq-item {
-    border-left: 1px solid rgba(0, 0, 0, 0.06);
-    border-right: 1px solid rgba(0, 0, 0, 0.06);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-/* Planner tool and results containers — clear boundary on light bg */
-.planner-tool,
-.itinerary-builder,
-.currency-converter,
-.weather-widget {
-    border: 1px solid rgba(13, 126, 131, 0.12);
-}
-
-/* Events and weather boxes on homepage */
-.events-box,
-.weather-box {
-    border-left: 1px solid rgba(13, 126, 131, 0.1);
-    border-right: 1px solid rgba(13, 126, 131, 0.1);
-    border-bottom: 1px solid rgba(13, 126, 131, 0.1);
 }
 
 /* Feature items in dining section */
@@ -3466,7 +2984,7 @@ h6 {
     border: 1px solid rgba(13,126,131,0.2);
     border-left: 4px solid var(--primary-color);
     border-radius: var(--border-radius);
-    padding: 1.2rem 1.5rem;
+    padding: 1.25rem 1.5rem;
     margin-top: 2rem;
 }
 
@@ -3489,7 +3007,7 @@ h6 {
 
 .coming-soon h3 {
     color: var(--secondary-dark);
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.25rem;
 }
 
 /* =============================================================================
@@ -3582,10 +3100,7 @@ h6 {
     }
 
     /* Day selector — horizontal scroll on mobile */
-    .day-selector {
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
+    
 
     .day-selector::-webkit-scrollbar {
         display: none;
@@ -3652,7 +3167,7 @@ h6 {
 
     /* Itinerary summary */
     .itinerary-summary {
-        padding: 1.2rem;
+        padding: 1.25rem;
     }
 
     /* Generated itinerary day cards — tighter */
@@ -3725,13 +3240,4 @@ h6 {
 .mobile-menu-toggle,
 .modal-close,
 .remove-activity,
-.search-btn {
-    min-height: 44px;
-    min-width: 44px;
-}
-
 /* Inline buttons that shouldn't be full height (remove × buttons etc.) */
-.remove-activity {
-    min-width: 32px;
-    min-height: 32px;
-}
