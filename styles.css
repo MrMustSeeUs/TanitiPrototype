@@ -253,17 +253,75 @@ section {
     color: var(--primary-color);
     font-size: 1.4rem;
     cursor: pointer;
-    padding: 0.4rem 0.85rem;
+    /* Padding creates space around the icon — top/bottom centres the 3 bars */
+    padding: 0.55rem 0.75rem;
     border-radius: var(--border-radius);
     transition: var(--transition);
     line-height: 1;
     font-weight: 700;
+    /* Flex centers the .menu-icon span inside the button */
+    display: none;
+    align-items: center;
+    justify-content: center;
 }
 
 .mobile-menu-toggle:hover {
     background: var(--secondary-color);
     border-color: var(--secondary-color);
-    color: var(--dark-color);
+}
+
+/* The three hamburger bars are drawn with the span itself (middle bar)
+   plus ::before (top bar) and ::after (bottom bar).
+   All three bars inherit their color from the button via currentColor. */
+.menu-icon {
+    position: relative;
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+    transition: var(--transition);
+}
+
+.menu-icon::before,
+.menu-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 22px;
+    height: 2px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+    transition: var(--transition);
+}
+
+/* Top bar sits 7px above the middle bar */
+.menu-icon::before { top: -7px; }
+
+/* Bottom bar sits 7px below the middle bar */
+.menu-icon::after  { top: 7px; }
+
+/* When the nav is open (JS adds .open to the button), animate into an X:
+   middle bar disappears, top/bottom bars rotate to cross */
+.mobile-menu-toggle.open .menu-icon {
+    background-color: transparent;         /* hide the middle bar */
+}
+
+.mobile-menu-toggle.open .menu-icon::before {
+    top: 0;
+    transform: rotate(45deg);
+}
+
+.mobile-menu-toggle.open .menu-icon::after {
+    top: 0;
+    transform: rotate(-45deg);
+}
+
+/* Hover state — swap bar color to dark so it reads on the gold background */
+.mobile-menu-toggle:hover .menu-icon,
+.mobile-menu-toggle:hover .menu-icon::before,
+.mobile-menu-toggle:hover .menu-icon::after {
+    background-color: var(--dark-color);
 }
 
 /* =============================================================================
@@ -736,11 +794,16 @@ section {
     margin-bottom: 0.5rem;
     position: relative;
     padding-left: 1.5rem;
+    color: var(--text-color);      /* explicit dark text — never let it float */
+    font-size: 0.97rem;
+    line-height: 1.6;
 }
 
 .feature-list li:before {
     content: '•';
-    color: var(--secondary-color);
+    /* --secondary-color (#f9a826 gold) is only ~2:1 on white — fails WCAG AA.
+       --primary-color (#0d7e83 teal) is ~5.1:1 on white — passes AA. */
+    color: var(--primary-color);
     font-weight: bold;
     position: absolute;
     left: 0;
@@ -1869,9 +1932,9 @@ section {
         font-size: 1.1rem;
     }
 
-    /* Show hamburger button on mobile */
+    /* Show hamburger button on mobile — flex so .menu-icon centers inside */
     .mobile-menu-toggle {
-        display: block;
+        display: flex;
     }
 
     /* Mobile nav drops down below the header */
